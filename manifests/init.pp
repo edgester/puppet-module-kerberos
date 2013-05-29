@@ -29,11 +29,11 @@
 #
 # === Authors
 #
-# Author Name <author@domain.com>
+# Author Name <jason@rampaginggeek.com>
 #
 # === Copyright
 #
-# Copyright 2013 Your name here, unless otherwise noted.
+# Copyright 2013 Jason Edgecombe, unless otherwise noted.
 #
 class krb5 {
 
