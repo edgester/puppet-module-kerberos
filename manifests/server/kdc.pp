@@ -12,6 +12,7 @@ class krb5::server::kdc($realm = 'EXAMPLE.COM') inherits krb5::base {
   package { 'krb5-kdc-server-packages' :
     ensure => present,
     name   => $krb5::params::kdc_server_packages,
+    before => File['kdc.conf'],
   }
 
   file { 'kdc.conf':
@@ -21,5 +22,13 @@ class krb5::server::kdc($realm = 'EXAMPLE.COM') inherits krb5::base {
     mode    => 644,
     owner   => 0,
     group   => 0,
+  }
+
+  service { 'krb5-kdc':
+    ensure     => running,
+    enable     => true,
+    hasrestart => true,
+    hasstatus  => true,
+    subscribe  => File['kdc.conf'],
   }
 }
