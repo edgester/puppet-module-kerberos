@@ -9,6 +9,9 @@
 	forwardable = true
 	proxiable = true
 
+        # set to true for OpenAFS to work
+        allow_weak_crypto = <%= @allow_weak_crypto %>
+
 # The following encryption type specification will be used by MIT Kerberos
 # if uncommented.  In general, the defaults in the MIT Kerberos code are
 # correct and overriding these specifications only serves to disable new
