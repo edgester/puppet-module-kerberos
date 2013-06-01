@@ -1,16 +1,38 @@
-krb5
+kerberos
 
-This is the krb5 module.
+This is a puppet module for managing Kerberos clients and servers
 
 License
 -------
 
+BSD
 
 Contact
 -------
 
+jason@rampaginggeek.com
 
 Support
 -------
 
-Please log tickets and issues at our [Projects site](http://projects.example.com)
+Please log tickets and issues at our [Projects site](https://github.com/edgester/puppet-kerberos)
+
+
+Example Use
+-----------
+
+    # Kerberos server (kdc and kadmin)
+    include kerberos::server::kadmind
+
+    class {'kerberos::server::kdc':
+      realm => 'EXAMPLE.ORG',
+    }
+
+    # kerberos client
+    class {'kerberos::client':
+      realm             => 'EXAMPLE.ORG',
+      kdc               => ['cellserver.example.org'],
+      admin_server      => ['cellserver.example.org'],
+      allow_weak_crypto => true,
+    }
+
