@@ -6,11 +6,11 @@
 #
 # Copyright 2013 Jason Edgecombe, unless otherwise noted.
 #
-class krb5::server::kadmind {
-  include krb5::base
+class kerberos::server::kadmind {
+  include kerberos::base
 
   package { 'krb5-kadmind-server-packages' :
     ensure => present,
-    name   => $krb5::params::kadmin_server_packages,
+    name   => $kerberos::params::kadmin_server_packages,
   }
 }

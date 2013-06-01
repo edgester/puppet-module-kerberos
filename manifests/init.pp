@@ -1,6 +1,6 @@
-# == Class: krb5
+# == Class: kerberos
 #
-# Full description of class krb5 here.
+# Full description of class kerberos here.
 #
 # === Parameters
 #
@@ -23,7 +23,7 @@
 #
 # === Examples
 #
-#  class { krb5:
+#  class { kerberos:
 #    servers => [ 'pool.ntp.org', 'ntp.local.company.com' ]
 #  }
 #
@@ -35,7 +35,7 @@
 #
 # Copyright 2013 Jason Edgecombe, unless otherwise noted.
 #
-class krb5 {
+class kerberos {
 
 
 }

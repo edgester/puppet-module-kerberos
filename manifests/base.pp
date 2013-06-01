@@ -6,7 +6,7 @@
 #
 # Copyright 2013 Jason Edgecombe, unless otherwise noted.
 #
-class krb5::base {
-  include krb5::params
+class kerberos::base {
+  include kerberos::params
 
 }

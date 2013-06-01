@@ -1,4 +1,4 @@
-name    'edgester-krb5'
+name    'edgester-kerberos'
 version '0.0.1'
 source 'UNKNOWN'
 author 'edgester'

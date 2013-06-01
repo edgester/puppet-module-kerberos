@@ -6,7 +6,7 @@
 #
 # Copyright 2013 Jason Edgecombe, unless otherwise noted.
 #
-class krb5::params {
+class kerberos::params {
 
   case $::operatingsystem {
     Ubuntu: {
