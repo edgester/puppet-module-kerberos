@@ -13,7 +13,7 @@ class kerberos::client($realm = 'EXAMPLE.COM', $kdc = [], $admin_server = [],
   package { 'krb5-client-packages' :
     ensure => present,
     name   => $kerberos::params::client_packages,
-    before => File['kdc.conf'],
+    before => File['krb5.conf'],
   }
 
   file { 'krb5.conf':
