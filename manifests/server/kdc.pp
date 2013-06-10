@@ -16,10 +16,10 @@ class kerberos::server::kdc($realm = 'EXAMPLE.COM') inherits kerberos::base {
   }
 
   file { 'kdc.conf':
-    path    => $kerberos::params::kdc_conf_path,
     ensure  => file,
-    content => template("kerberos/kdc.conf.erb"),
-    mode    => 644,
+    path    => $kerberos::params::kdc_conf_path,
+    content => template('kerberos/kdc.conf.erb'),
+    mode    => '0644',
     owner   => 0,
     group   => 0,
   }
