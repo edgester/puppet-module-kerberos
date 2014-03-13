@@ -48,7 +48,9 @@
         }
 
 [domain_realm]
-	.example.org = EXAMPLE.ORG
+  <% domain_realm.each_pair do |key, val| -%>
+        <%= key %> = <%= val %>
+  <% end -%>
 
 [login]
 	krb4_convert = true

@@ -6,7 +6,7 @@
 #
 # Copyright 2013 Jason Edgecombe, unless otherwise noted.
 #
-class kerberos::client($realm = 'EXAMPLE.COM', $kdc = [], $admin_server = [],
+class kerberos::client($realm = 'EXAMPLE.COM', $domain_realm = {}, $kdc = [], $admin_server = [],
   $allow_weak_crypto = false) inherits kerberos::base {
 
   include kerberos::base
