@@ -16,29 +16,7 @@
 #       realm => "REALMONE.LOCAL",
 #     }
 #
-#   It is best to store passwords in Hiera; that way,
-#   you can have a set of test credentials (e.g. in
-#   'virtual_true.yaml'), and a different set of credentials
-#   for production servers.
-#
-#     kdc1.realmone.local.yaml:
-#     ---
-#     kerberos::server::kdc::master_password: secretmasterpassword
-#
-#     kerberos_principals_REALMONE.LOCAL:
-#       user1:
-#         password: secretsecret
-#
-#     kerberos_principals_EXAMPLE.COM:
-#       user2:
-#         password: p4ssw0rd!
-#
-#     trusted_realms:
-#       realms:
-#         - INSECURE.LOCAL
-#         - EXAMPLE.COM
-#         - EXAMPLE.ORG
-#       password: tgtsecret
+#   It is best to store passwords in Hiera; see README file for details.
 #
 # === Authors
 #
