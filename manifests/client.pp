@@ -1,3 +1,9 @@
+# Valid values for $kdc_logfile and $admin_logfile include:
+#   FILE:/var/log/kdc.log
+#   CONSOLE
+#   SYSLOG:INFO:DAEMON
+#   DEVICE=/dev/tty04
+#
 # === Authors
 #
 # Author Name <jason@rampaginggeek.com>
@@ -7,7 +13,7 @@
 # Copyright 2013 Jason Edgecombe, unless otherwise noted.
 #
 class kerberos::client($realm = 'EXAMPLE.COM', $domain_realm = {}, $kdc = [], $admin_server = [],
-  $allow_weak_crypto = false) inherits kerberos::base {
+  $allow_weak_crypto = false, $kdc_logfile = 'FILE:/var/log/kdc.log', $admin_logfile = 'FILE:/var/log/kerberos_admin_server.log') inherits kerberos::base {
 
   include kerberos::base
 

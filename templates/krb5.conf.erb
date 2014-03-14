@@ -55,3 +55,9 @@
 [login]
 	krb4_convert = true
 	krb4_get_tickets = false
+
+<% if @kdc_logfile or @admin_logfile -%>
+[logging]
+        kdc = <%= @kdc_logfile %>
+        admin_server = <%= @admin_logfile %>
+<% end -%>
