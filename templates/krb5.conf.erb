@@ -48,8 +48,16 @@
         }
 
 [domain_realm]
-	.example.org = EXAMPLE.ORG
+  <% domain_realm_list.each_pair do |key, val| -%>
+        <%= key %> = <%= val %>
+  <% end -%>
 
 [login]
 	krb4_convert = true
 	krb4_get_tickets = false
+
+<% if @kdc_logfile or @admin_logfile -%>
+[logging]
+        kdc = <%= @kdc_logfile %>
+        admin_server = <%= @admin_logfile %>
+<% end -%>

@@ -31,6 +31,7 @@ Example Use
     # kerberos client
     class {'kerberos::client':
       realm             => 'EXAMPLE.ORG',
+      domain_realm      => { '.example.org' => 'EXAMPLE.ORG', },
       kdc               => ['cellserver.example.org'],
       admin_server      => ['cellserver.example.org'],
       allow_weak_crypto => true,
