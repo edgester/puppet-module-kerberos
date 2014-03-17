@@ -8,6 +8,7 @@
 #
 define kerberos::addprinc($principal_name = $title, $password = 'password', $flags = '') {
   exec { "add_principal_$principal_name":
-    command => "kadmin.local -e 'des3-hmac-sha1:normal des-cbc-crc:v4' -w '$password' -q 'addprinc $flags $principal_name'"
+    command => "kadmin.local -w '$password' -q 'addprinc $flags $principal_name'",
+    require => [ Package['krb5-kadmind-server-packages'], File['krb5.conf'], ],
   }
 }
