@@ -53,7 +53,7 @@ class kerberos::server::kdc($realm = 'EXAMPLE.COM', $master_password) inherits k
   exec { "create_krb5kdc_principal":
     command => "/usr/sbin/kdb5_util -r $realm -P $master_password create -s",
     creates => "/var/lib/krb5kdc/principal",
-    require => File['/var/lib/krb5kdc'],
+    require => [ File['/var/lib/krb5kdc'], File['krb5.conf'], ],
   }
 
   # Look up our users in hiera.  Create a principal for each one listed

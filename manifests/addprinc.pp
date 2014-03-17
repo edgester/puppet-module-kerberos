@@ -9,6 +9,6 @@
 define kerberos::addprinc($principal_name = $title, $password = 'password', $flags = '') {
   exec { "add_principal_$principal_name":
     command => "kadmin.local -w '$password' -q 'addprinc $flags $principal_name'",
-    require => [ Package['krb5-kadmind-server-packages'], File['krb5.conf'], ],
+    require => [ Package['krb5-kadmind-server-packages'], Exec['create_krb5kdc_principal'] ],
   }
 }
