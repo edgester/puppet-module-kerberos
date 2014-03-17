@@ -31,23 +31,6 @@
 class kerberos::server::kdc($realm = 'EXAMPLE.COM', $master_password) inherits kerberos::base {
   include kerberos::base
 
-  # In some environments (e.g. virtual machines), /dev/random produces
-  # no data, breaking kdb5_util create.  We work around this problem
-  # by linking /dev/urandom to /dev/random.  This reduces entropy and
-  # therefore security substantially, so we do not want to do this unless
-  # necessary.
-  # See: https://dev.openwrt.org/ticket/10713
-  if $::virtual {
-    exec { "initialize_dev_random":
-      command => "rm -f /dev/random && ln -fs /dev/urandom /dev/random",
-    }
-  }
-  else {
-    exec { "initialize_dev_random":
-      command => "echo Using system's /dev/random",
-    }
-  }
-
   package { 'krb5-kdc-server-packages' :
     ensure => present,
     name   => $kerberos::params::kdc_server_packages,
@@ -70,7 +53,7 @@ class kerberos::server::kdc($realm = 'EXAMPLE.COM', $master_password) inherits k
   exec { "create_krb5kdc_principal":
     command => "/usr/sbin/kdb5_util -r $realm -P $master_password create -s",
     creates => "/var/lib/krb5kdc/principal",
-    require => [ File['/var/lib/krb5kdc'], Exec["initialize_dev_random"], ],
+    require => File['/var/lib/krb5kdc'],
   }
 
   # Look up our users in hiera.  Create a principal for each one listed
