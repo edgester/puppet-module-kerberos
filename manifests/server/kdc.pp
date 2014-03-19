@@ -80,4 +80,12 @@ class kerberos::server::kdc($realm = 'EXAMPLE.COM', $master_password) inherits k
     subscribe  => File['kdc.conf'],
     require => Exec["create_krb5kdc_principal"],
   }
+  service { 'krb5-admin-server':
+    ensure     => running,
+    enable     => true,
+    hasrestart => true,
+    hasstatus  => true,
+    subscribe  => File['krb5.conf'],
+    require => Service["krb5-kdc"],
+  }
 }
