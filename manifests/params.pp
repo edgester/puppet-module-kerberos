@@ -15,6 +15,10 @@ class kerberos::params {
       $kadmin_server_packages = [ 'krb5-admin-server' ]
       $krb5_conf_path         = '/etc/krb5.conf'
       $kdc_conf_path          = '/etc/krb5kdc/kdc.conf'
+      $kadm5_acl_path         = '/etc/krb5kdc/kadm5.acl'
+      $krb5kdc_database_path  = '/var/lib/krb5kdc/principal'
+      $admin_keytab_path      = '/etc/krb5kdc/kadm5.keytab'
+      $key_stash_path         = '/etc/krb5kdc/stash'
     }
     default: {
       fail("The ${module_name} module is not supported on ${::osfamily} based systems")
