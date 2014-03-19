@@ -37,3 +37,38 @@ Example Use
       allow_weak_crypto => true,
     }
 
+Hiera Usage
+-----------
+
+It is best to store passwords in Hiera; that way, you can have a set of test
+credentials, and a different set of credentials for production servers.  For
+example, in debug environments, you might use realmone.local and realmtwo.local
+instead of realmone.com and realmtwo.com, which of course would cause puppet
+to pull your configuration from different .yaml files.  Debug configuration
+could be checked in to the repository, and production values could be stored
+in a more secure location.
+
+
+  kdc1.realmone.com.yaml:
+  ---
+  kerberos_principals:
+    user1:
+      password: secretsecret
+
+
+  kdc2.realmtwo.com.yaml:
+  ---
+  kerberos_principals:
+    user2:
+      password: p4ssw0rd!
+
+
+  production.yaml:
+  ---
+  kerberos::server::kdc::master_password: verylongsecurerandomlyproducedpassword
+
+  trusted_realms:
+    realms:
+      - REALMONE.COM
+      - REALMTWO.COM
+    password: differentverylongsecurerandomlyproducedpassword
