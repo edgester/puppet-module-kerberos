@@ -8,9 +8,9 @@
 #   $realm:
 #     The Kerberos realm (e.g. 'EXAMPLE.COM')
 #   $master_password:
-#     The master password for the kdc database.  See: http://bit.ly/1cWynBB
+#     The master password for the kdc database. [1]
 #   $acl:
-#     Access control list entries.  See: http://bit.ly/1j0rP7K
+#     Access control list entries. [2]
 #   $kdc_conf_path:
 #     Path to kdc.conf.  See: templates/kdc.conf.erb
 #   $kadm5_acl_path:
@@ -18,12 +18,20 @@
 #   $krb5kdc_database_path:
 #     Path to kdc principals database.
 #   $admin_keytab_path:
-#     Path to admin keytab.  See: http://bit.ly/1qR8vLj
+#     Path to admin keytab. [3]
 #   $key_stash_path:
 #     Path to key stash.
 #   $use_debug_random:
 #     Set to true on debug virtual systems if /dev/random
 #     does not produce any data.
+#
+# === References
+#
+# [1] http://web.mit.edu/kerberos/krb5-1.6/krb5-1.6.3/doc/krb5-install.html#Create-the-Database
+#
+# [2] http://web.mit.edu/kerberos/krb5-1.6/krb5-1.6.3/doc/krb5-install.html#Add-Administrators-to-the-Acl-File
+#
+# [3] http://web.mit.edu/kerberos/krb5-1.6/krb5-1.6.3/doc/krb5-install.html#Create-a-kadmind-Keytab-_0028optional_0029
 #
 # === Sample Usage
 #
