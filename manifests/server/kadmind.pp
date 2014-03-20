@@ -20,6 +20,5 @@ class kerberos::server::kadmind {
     hasrestart => true,
     hasstatus  => true,
     subscribe  => File['krb5.conf'],
-    require => Service["krb5-kdc"],
   }
 }
