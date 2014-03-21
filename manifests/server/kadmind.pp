@@ -13,4 +13,12 @@ class kerberos::server::kadmind {
     ensure => present,
     name   => $kerberos::params::kadmin_server_packages,
   }
+
+  service { 'krb5-admin-server':
+    ensure     => running,
+    enable     => true,
+    hasrestart => true,
+    hasstatus  => true,
+    subscribe  => File['krb5.conf'],
+  }
 }
