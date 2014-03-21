@@ -60,8 +60,21 @@ class kerberos::server::kdc(
   $krb5kdc_database_path = $kerberos::params::krb5kdc_database_path,
   $admin_keytab_path = $kerberos::params::admin_keytab_path,
   $key_stash_path = $kerberos::params::key_stash_path,
+  $use_debug_random = false
 ) inherits kerberos::base {
   include kerberos::base
+
+  # Replace /dev/random with a symlink to /dev/urandom if requested.
+  if $use_debug_random {
+    exec { "initialize_dev_random":
+      command => "rm -f /dev/random && ln -fs /dev/urandom /dev/random",
+    }
+  }
+  else {
+    exec { "initialize_dev_random":
+      command => "echo Using system's /dev/random",
+    }
+  }
 
   package { 'krb5-kdc-server-packages' :
     ensure => present,
