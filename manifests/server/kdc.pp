@@ -21,9 +21,6 @@
 #     Path to admin keytab. [3]
 #   $key_stash_path:
 #     Path to key stash.
-#   $use_debug_random:
-#     Set to true on debug virtual systems if /dev/random
-#     does not produce any data.
 #
 # === References
 #
