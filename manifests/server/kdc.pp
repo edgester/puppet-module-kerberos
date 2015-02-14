@@ -3,66 +3,43 @@
 # Kerberos kdc configuration file definition.  Configures your
 # kdc, including the kdc.conf file and Kerberos principals.
 #
-# === Parameters
-#
-#   $realm:
-#     The Kerberos realm (e.g. 'EXAMPLE.COM')
-#   $master_password:
-#     The master password for the kdc database. [1]
-#   $acl:
-#     Access control list entries. [2]
-#   $kdc_conf_path:
-#     Path to kdc.conf.  See: templates/kdc.conf.erb
-#   $kadm5_acl_path:
-#     Path to kadm5.acl.  See: templates/kadm5.acl
-#   $krb5kdc_database_path:
-#     Path to kdc principals database.
-#   $admin_keytab_path:
-#     Path to admin keytab. [3]
-#   $key_stash_path:
-#     Path to key stash.
-#
-# === References
-#
-# [1] http://web.mit.edu/kerberos/krb5-1.6/krb5-1.6.3/doc/krb5-install.html#Create-the-Database
-#
-# [2] http://web.mit.edu/kerberos/krb5-1.6/krb5-1.6.3/doc/krb5-install.html#Add-Administrators-to-the-Acl-File
-#
-# [3] http://web.mit.edu/kerberos/krb5-1.6/krb5-1.6.3/doc/krb5-install.html#Create-a-kadmind-Keytab-_0028optional_0029
-#
-# === Sample Usage
-#
-#     class {'kerberos::server::kdc':
-#       realm => "REALMONE.LOCAL",
-#     }
-#
-#   It is best to store passwords in Hiera; see README file for details.
-#
 # === Authors
 #
 # Author Name <jason@rampaginggeek.com>
 #
 # Additions by <greg.1.anderson@greeknowe.org>
+# Additions by Michael Weiser <michael.weiser@gmx.de>
 #
 # === Copyright
 #
 # Copyright 2013 Jason Edgecombe, unless otherwise noted.
 #
 class kerberos::server::kdc(
-  $realm = 'EXAMPLE.COM',
-  $master_password,
-  $acl = { "*/admin@$realm" => '*' },
-  $kdc_conf_path = $kerberos::params::kdc_conf_path,
-  $kadm5_acl_path = $kerberos::params::kadm5_acl_path,
-  $krb5kdc_database_path = $kerberos::params::krb5kdc_database_path,
-  $admin_keytab_path = $kerberos::params::admin_keytab_path,
-  $key_stash_path = $kerberos::params::key_stash_path,
-) inherits kerberos::base {
+  $realm = $kerberos::realm,
+  $kdc_database_password = $kerberos::kdc_database_password,
+  $kadmind_acls = $kerberos::kadmind_acls,
+  $kdc_conf_path = $kerberos::kdc_conf_path,
+  $kadm5_acl_path = $kerberos::kadm5_acl_path,
+  $kdc_database_path = $kerberos::kdc_database_path,
+  $kdc_stash_path = $kerberos::kdc_stash_path,
+
+  $realm = $kerberos::realm,
+  $kdc_ports = $kerberos::kdc_ports,
+  $kdc_max_life = $kerberos::kdc_max_life,
+  $kdc_max_renewable_life = $kerberos::kdc_max_renewable_life,
+  $kdc_master_key_type = $kerberos::kdc_master_key_type,
+  $kdc_supported_enctypes = $kerberos::kdc_supported_enctypes,
+  $pkinit_anchors = $kerberos::pkinit_anchors_cfg,
+  $kdc_pkinit_identity = $kerberos::kdc_pkinit_identity_cfg,
+  $kdc_logfile = $kerberos::kdc_logfile_cfg,
+  $kadmind_logfile = $kerberos::kadmind_logfile_cfg,
+  $kdc_server_packages = $kerberos::kdc_server_packages,
+) inherits kerberos {
   include kerberos::base
 
   package { 'krb5-kdc-server-packages' :
     ensure => present,
-    name   => $kerberos::params::kdc_server_packages,
+    name   => $kdc_server_packages,
     before => File['kdc.conf'],
   }
 
@@ -94,8 +71,8 @@ class kerberos::server::kdc(
   }
 
   exec { "create_krb5kdc_principal":
-    command => "/usr/sbin/kdb5_util -r $realm -P $master_password create -s",
-    creates => "$krb5kdc_database_path",
+    command => "/usr/sbin/kdb5_util -r $realm -P $kdc_database_password create -s",
+    creates => "$kdc_database_path",
     require => [ File['/var/lib/krb5kdc'], File['krb5.conf'], File['kdc.conf'], Exec["initialize_dev_random"], ],
   }
 
