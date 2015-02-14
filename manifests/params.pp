@@ -9,7 +9,7 @@
 class kerberos::params {
 
   case $::operatingsystem {
-    Ubuntu: {
+    Ubuntu, Debian: {
       $client_packages    = [ 'krb5-user' ]
       $kdc_server_packages    = [ 'krb5-kdc' ]
       $kadmin_server_packages = [ 'krb5-admin-server' ]
