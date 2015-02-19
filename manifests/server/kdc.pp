@@ -96,19 +96,21 @@ class kerberos::server::kdc(
   exec { "create_krb5kdc_principal":
     command => "/usr/sbin/kdb5_util -r $realm -P $master_password create -s",
     creates => "$krb5kdc_database_path",
-    require => [ File['/var/lib/krb5kdc'], File['krb5.conf'], File['kdc.conf'], Exec["initialize_dev_random"], ],
+    require => [ File['/var/lib/krb5kdc'], File['krb5.conf'], File['kdc.conf'] ],
   }
 
   # Look up our users in hiera.  Create a principal for each one listed
   # for this realm.
-  $kerberos_principals = hiera("kerberos_principals", [])
+  $kerberos_principals = hiera_hash("kerberos::principals", {})
   create_resources('kerberos::addprinc',$kerberos_principals)
 
   # Look up our trusted realms from hiera.  Create trusted principal pairs
   # for each trusted realm that is not the realm of the current server.
-  $trusted = hiera('trusted_realms', [])
-  $trusted_realms = delete($trusted['realms'], $realm)
+  $trusted = hiera_hash('kerberos::trusted_realms', {})
   if $trusted {
+    if $trusted['realms'] {
+      $trusted_realms = delete($trusted['realms'], $realm)
+    }
     kerberos::trust { $trusted_realms:
       this_realm => $realm,
       password => $trusted['password'],
