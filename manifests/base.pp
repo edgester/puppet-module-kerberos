@@ -9,7 +9,14 @@
 #
 # Copyright 2013 Jason Edgecombe, unless otherwise noted.
 #
-class kerberos::base inherits kerberos {
-  # very common base logic will go here, like installing pkinit packages on
-  # client and server
+class kerberos::base (
+  $pkinit_anchors = $kerberos::pkinit_anchors,
+  $pkinit_packages = $kerberos::pkinit_packages,
+) inherits kerberos {
+  if $pkinit_anchors {
+    package { 'krb5-pkinit-packages':
+      ensure => present,
+      name   => $pkinit_packages,
+    }
+  }
 }

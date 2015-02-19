@@ -19,6 +19,7 @@ class kerberos::params {
       $client_packages    = [ 'krb5-user' ]
       $kdc_server_packages    = [ 'krb5-kdc' ]
       $kadmin_server_packages = [ 'krb5-admin-server' ]
+      $pkinit_packages        = [ 'krb5-pkinit' ]
 
       $krb5_conf_path         = '/etc/krb5.conf'
       $kdc_conf_path          = '/etc/krb5kdc/kdc.conf'

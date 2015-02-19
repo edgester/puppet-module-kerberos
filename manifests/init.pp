@@ -46,6 +46,9 @@
 # $proxiable
 #   Request proxiable tickets by default.
 #
+# $pkinit_anchors
+#   Path to CA certificate to use for PKINIT.
+#
 # kdc.conf
 # $kdc_ports
 #   Ports to have the KDC listen on.
@@ -68,6 +71,11 @@
 # $kdc_supported_enctypes
 #   List of encryption types supported by the KDC.
 #
+# $kdc_pkinit_identity
+#   Certificate and private key to use for PKINIT at the KDC. Format: <path to
+#   cert>,<path to key>. FILE: is prepended automatically if beginning with a
+#   slash.
+#
 # $kdc_logfile
 # no kadm5.conf, so it's in kdc.conf
 # $kadmind_logfile
@@ -84,6 +92,7 @@
 # $kadmind_acls
 #   ACLs for for the admin service.
 #
+# $pkinit_packages
 # $client_packages
 # $kdc_server_packages
 # $kadmin_server_packages
@@ -96,6 +105,7 @@
 # [2] http://web.mit.edu/kerberos/krb5-1.6/krb5-1.6.3/doc/krb5-install.html#Add-Administrators-to-the-Acl-File
 #
 # [3] http://web.mit.edu/kerberos/krb5-1.6/krb5-1.6.3/doc/krb5-install.html#Create-a-kadmind-Keytab-_0028optional_0029
+#
 # === Authors
 #
 # Author Name <jason@rampaginggeek.com>
@@ -125,6 +135,7 @@ class kerberos(
   $allow_weak_crypto = false,
   $forwardable = true,
   $proxiable = true,
+  $pkinit_anchors = undef,
 
   $kdc_ports = '88',
   $kdc_database_path = $kerberos::params::kdc_database_path,
@@ -134,6 +145,7 @@ class kerberos(
   $kdc_max_renewable_life = '7d 0h 0m 0s',
   $kdc_master_key_type = 'aes256-cts',
   $kdc_supported_enctypes = ['aes256-cts:normal', 'arcfour-hmac:normal', 'des3-hmac-sha1:normal' ],
+  $kdc_pkinit_identity = undef,
   $kdc_logfile = $kerberos::params::kdc_logfile,
 
   # no kadm5.conf, so it's in kdc.conf
@@ -146,6 +158,7 @@ class kerberos(
   $kadmind_acls = { "*/admin@$realm" => '*' },
 
   # packages
+  $pkinit_packages = $kerberos::params::pkinit_packages,
   $client_packages = $kerberos::params::client_packages,
   $kdc_server_packages = $kerberos::params::kdc_server_packages,
   $kadmin_server_packages = $kerberos::params::kadmin_server_packages,
@@ -158,6 +171,16 @@ class kerberos(
   $kadmind_logfile_cfg = $kadmind_logfile ? {
     undef => undef,
     default => regsubst($kadmind_logfile, "^/", "FILE:/")
+  }
+
+  $pkinit_anchors_cfg = $pkinit_anchors ? {
+    undef => undef,
+    default => regsubst($pkinit_anchors, "^/", "FILE:/")
+  }
+
+  $kdc_pkinit_identity_cfg = $kdc_pkinit_identity ? {
+    undef => undef,
+    default => regsubst($kdc_pkinit_identity, "^/", "FILE:/")
   }
 
   if $client {
