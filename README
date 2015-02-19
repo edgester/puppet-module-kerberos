@@ -22,23 +22,37 @@ Example Use
 -----------
 
     # Kerberos server (kdc and kadmin)
-    include kerberos::server::kadmind
-
-    class {'kerberos::server::kdc':
+    class {'kerberos':
+      master => true,
       realm => 'EXAMPLE.ORG',
+      kdc_database_password => 'secret',
     }
 
     # kerberos client
-    class {'kerberos::client':
+    class {'kerberos':
+      client            => true,
       realm             => 'EXAMPLE.ORG',
       domain_realm      => { '.example.org' => 'EXAMPLE.ORG', },
-      kdc               => ['cellserver.example.org'],
+      kdcs              => ['cellserver.example.org'],
       admin_server      => 'cellserver.example.org',
       allow_weak_crypto => true,
     }
 
 Hiera Usage
 -----------
+
+Define all the main class parameters you'd like to change like this:
+
+kerberos::realm: 'EXAMPLE.ORG'
+kerberos::kdcs:
+  - 'cellserver.example.org'
+
+Forget about client => true. Just include or hiera_include() any of the
+following classes:
+
+kerberos::client
+kerberos::server::kdc
+kerberos::server::kadmind
 
 It is best to store passwords in Hiera; that way, you can have a set of test
 credentials, and a different set of credentials for production servers.  For
@@ -65,7 +79,7 @@ in a more secure location.
 
   production.yaml:
   ---
-  kerberos::server::kdc::master_password: verylongsecurerandomlyproducedpassword
+  kerberos::kdc_database_password: verylongsecurerandomlyproducedpassword
 
   trusted_realms:
     realms:
