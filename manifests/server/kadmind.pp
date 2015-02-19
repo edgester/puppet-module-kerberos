@@ -1,17 +1,18 @@
 # === Authors
 #
 # Author Name <jason@rampaginggeek.com>
+# Additions by Michael Weiser <michael.weiser@gmx.de>
 #
 # === Copyright
 #
 # Copyright 2013 Jason Edgecombe, unless otherwise noted.
 #
-class kerberos::server::kadmind {
-  include kerberos::base
-
+class kerberos::server::kadmind (
+  $kadmin_server_packages = $kerberos::kadmin_server_packages,
+) inherits kerberos {
   package { 'krb5-kadmind-server-packages' :
     ensure => present,
-    name   => $kerberos::params::kadmin_server_packages,
+    name   => $kadmin_server_packages,
   }
 
   service { 'krb5-admin-server':

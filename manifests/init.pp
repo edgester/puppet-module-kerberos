@@ -1,41 +1,171 @@
 # == Class: kerberos
 #
-# Full description of class kerberos here.
+# Base class for the module. Provides parameter defaulting from
+# kerberos::params with override via hiera lookups.
 #
 # === Parameters
 #
-# Document parameters here.
+# Paths:
 #
-# [*sample_parameter*]
-#   Explanation of what this parameter affects and what it defaults to.
-#   e.g. "Specify one or more upstream ntp servers as an array."
+# $krb5_conf_path:
+#   Path to the client configuration file.
 #
-# === Variables
+# $kdc_conf_path = $kerberos::params::kdc_conf_path,
+#   Path to the main KDC configuration file.
 #
-# Here you should define a list of variables that this module would require.
+# $kadm5_acl_path = $kerberos::params::kadm5_acl_path,
+#   Path to the admin service ACL file.
 #
-# [*sample_variable*]
-#   Explanation of how this variable affects the funtion of this class and if it
-#   has a default. e.g. "The parameter enc_ntp_servers must be set by the
-#   External Node Classifier as a comma separated list of hostnames." (Note,
-#   global variables should not be used in preference to class parameters  as of
-#   Puppet 2.6.)
+# $kdb5_util_path = $kerberos::params::kdb5_util_path,
+#   Path of kdb5_util used for creating databases.
 #
-# === Examples
+# Settings in files:
 #
-#  class { kerberos:
-#    servers => [ 'pool.ntp.org', 'ntp.local.company.com' ]
-#  }
+# krb5.conf
+# $realm:
+#   The Kerberos realm (e.g. 'EXAMPLE.COM')
 #
+# $domain_realm
+#   Hash of domain to realm mappings.
+#
+# $kdcs
+#   Array of KDCs to configure.
+#
+# $master_kdc
+#   The master KDC to configure (used for password changes).
+#
+# $admin_server
+#   The admin service to use.
+#
+# $allow_weak_crypto
+#   Re-enable Single-DES.
+#
+# $forwardable
+#   Request forwardable tickets by default.
+#
+# $proxiable
+#   Request proxiable tickets by default.
+#
+# kdc.conf
+# $kdc_ports
+#   Ports to have the KDC listen on.
+#
+# $kdc_database_path
+#   Path to the principal database.
+#
+# $kdc_stash_path
+#   Path to key stash.
+#
+# $kdc_max_life
+#   Maximum ticket lifetime allowed by the KDC.
+#
+# $kdc_max_renewable_life
+#   Maximum renewable lifetime allowed by the KDC.
+#
+# $kdc_master_key_type
+#   The key type to use to encrypt the principal database.
+#
+# $kdc_supported_enctypes
+#   List of encryption types supported by the KDC.
+#
+# $kdc_logfile
+# no kadm5.conf, so it's in kdc.conf
+# $kadmind_logfile
+#   Valid values for $kdc_logfile and $kadmind_logfile include:
+#   FILE:/var/log/kdc.log
+#   CONSOLE
+#   SYSLOG:INFO:DAEMON
+#   DEVICE=/dev/tty04
+#
+# $kdc_principals
+# $kdc_trusted_realms
+#   Principals and realm trusts to be created on the master.
+#
+# $kadmind_acls
+#   ACLs for for the admin service.
+#
+# $client_packages
+# $kdc_server_packages
+# $kadmin_server_packages
+#   Package names.
+#
+# === References
+#
+# [1] http://web.mit.edu/kerberos/krb5-1.6/krb5-1.6.3/doc/krb5-install.html#Create-the-Database
+#
+# [2] http://web.mit.edu/kerberos/krb5-1.6/krb5-1.6.3/doc/krb5-install.html#Add-Administrators-to-the-Acl-File
+#
+# [3] http://web.mit.edu/kerberos/krb5-1.6/krb5-1.6.3/doc/krb5-install.html#Create-a-kadmind-Keytab-_0028optional_0029
 # === Authors
 #
 # Author Name <jason@rampaginggeek.com>
+# Additions by Michael Weiser <michael.weiser@gmx.de>
 #
 # === Copyright
 #
 # Copyright 2013 Jason Edgecombe, unless otherwise noted.
 #
-class kerberos {
+class kerberos(
+  # roles
+  $client = false,
+  $master = false,
 
+  # paths to configuration files
+  $krb5_conf_path = $kerberos::params::krb5_conf_path,
+  $kdc_conf_path = $kerberos::params::kdc_conf_path,
+  $kadm5_acl_path = $kerberos::params::kadm5_acl_path,
+  $kdb5_util_path = $kerberos::params::kdb5_util_path,
 
+  # settings in files
+  $realm = 'EXAMPLE.COM',
+  $domain_realm = {},
+  $kdcs = [],
+  $master_kdc = undef,
+  $admin_server = undef,
+  $allow_weak_crypto = false,
+  $forwardable = true,
+  $proxiable = true,
+
+  $kdc_ports = '88',
+  $kdc_database_path = $kerberos::params::kdc_database_path,
+  $kdc_database_password = undef,
+  $kdc_stash_path = $kerberos::params::kdc_stash_path,
+  $kdc_max_life = '10h 0m 0s',
+  $kdc_max_renewable_life = '7d 0h 0m 0s',
+  $kdc_master_key_type = 'aes256-cts',
+  $kdc_supported_enctypes = ['aes256-cts:normal', 'arcfour-hmac:normal', 'des3-hmac-sha1:normal' ],
+  $kdc_logfile = $kerberos::params::kdc_logfile,
+
+  # no kadm5.conf, so it's in kdc.conf
+  $kadmind_logfile = $kerberos::params::kadmind_logfile,
+
+  # settings to be implemented via logic
+  $kdc_principals = {},
+  $kdc_trusted_realms = {},
+
+  $kadmind_acls = { "*/admin@$realm" => '*' },
+
+  # packages
+  $client_packages = $kerberos::params::client_packages,
+  $kdc_server_packages = $kerberos::params::kdc_server_packages,
+  $kadmin_server_packages = $kerberos::params::kadmin_server_packages,
+) inherits kerberos::params {
+  $kdc_logfile_cfg = $kdc_logfile ? {
+    undef => undef,
+    default => regsubst($kdc_logfile, "^/", "FILE:/")
+  }
+
+  $kadmind_logfile_cfg = $kadmind_logfile ? {
+    undef => undef,
+    default => regsubst($kadmind_logfile, "^/", "FILE:/")
+  }
+
+  if $client {
+    include kerberos::client
+  }
+
+  if $master {
+    include kerberos::server::kdc
+    include kerberos::server::kadmind
+  }
 }
