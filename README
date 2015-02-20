@@ -51,8 +51,7 @@ Forget about client => true. Just include or hiera_include() any of the
 following classes:
 
 kerberos::client
-kerberos::server::kdc
-kerberos::server::kadmind
+kerberos::kdc::master
 
 It is best to store passwords in Hiera; that way, you can have a set of test
 credentials, and a different set of credentials for production servers.  For

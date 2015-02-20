@@ -1,7 +1,9 @@
 # === Class: kerberos::server::kdc
 #
-# Kerberos kdc configuration file definition.  Configures your
-# kdc, including the kdc.conf file and Kerberos principals.
+# Kerberos kdc service. Installs and starts the KDC service. Uses
+# kerberos::server::base to create kdc.conf. Although it starts the service
+# it does not create a database. Use kerberos::kdc::master
+# to actually set up functioning KDCs.
 #
 # === Authors
 #
@@ -14,29 +16,15 @@
 #
 # Copyright 2013 Jason Edgecombe, unless otherwise noted.
 #
-class kerberos::server::kdc(
-  $realm = $kerberos::realm,
-  $kdc_database_password = $kerberos::kdc_database_password,
-  $kadmind_acls = $kerberos::kadmind_acls,
-  $kdc_conf_path = $kerberos::kdc_conf_path,
-  $kadm5_acl_path = $kerberos::kadm5_acl_path,
+class kerberos::server::kdc (
   $kdc_database_path = $kerberos::kdc_database_path,
-  $kdc_stash_path = $kerberos::kdc_stash_path,
-
-  $realm = $kerberos::realm,
-  $kdc_ports = $kerberos::kdc_ports,
-  $kdc_max_life = $kerberos::kdc_max_life,
-  $kdc_max_renewable_life = $kerberos::kdc_max_renewable_life,
-  $kdc_master_key_type = $kerberos::kdc_master_key_type,
-  $kdc_supported_enctypes = $kerberos::kdc_supported_enctypes,
-  $pkinit_anchors = $kerberos::pkinit_anchors_cfg,
-  $kdc_pkinit_identity = $kerberos::kdc_pkinit_identity_cfg,
-  $kdc_logfile = $kerberos::kdc_logfile_cfg,
-  $kadmind_logfile = $kerberos::kadmind_logfile_cfg,
   $kdc_server_packages = $kerberos::kdc_server_packages,
+  $kdc_service_name = $kerberos::kdc_service_name,
 ) inherits kerberos {
   # pkinit packages
   include kerberos::base
+  # kdc.conf
+  include kerberos::server::base
 
   package { 'krb5-kdc-server-packages' :
     ensure => present,
@@ -44,65 +32,32 @@ class kerberos::server::kdc(
     before => File['kdc.conf'],
   }
 
-  file { 'kdc.conf':
-    ensure  => file,
-    path    => $kdc_conf_path,
-    content => template('kerberos/kdc.conf.erb'),
-    mode    => '0644',
-    owner   => 0,
-    group   => 0,
-  }
-
-  file { "/etc/krb5kdc":
-    ensure => "directory",
-  }
-
-  file { 'kadm5.acl':
-    ensure  => file,
-    path    => $kadm5_acl_path,
-    content => template('kerberos/kadm5.acl.erb'),
-    mode    => '0644',
-    owner   => 0,
-    group   => 0,
-    require => File['/etc/krb5kdc'],
-  }
-
-  file { "/var/lib/krb5kdc":
-    ensure => "directory",
-  }
-
-  exec { "create_krb5kdc_principal":
-    command => "/usr/sbin/kdb5_util -r $realm -P $kdc_database_password create -s",
-    creates => "$kdc_database_path",
-    require => [ File['/var/lib/krb5kdc'], File['krb5.conf'], File['kdc.conf'], Exec["initialize_dev_random"], ],
-  }
-
-  # Look up our users in hiera.  Create a principal for each one listed
-  # for this realm.
-  $kerberos_principals = hiera_hash("kerberos::principals", {})
-  create_resources('kerberos::addprinc',$kerberos_principals)
-
-  # Look up our trusted realms from hiera.  Create trusted principal pairs
-  # for each trusted realm that is not the realm of the current server.
-  $trusted = hiera_hash('kerberos::trusted_realms', {})
-  if $trusted {
-    if $trusted['realms'] {
-      $trusted_realms = delete($trusted['realms'], $realm)
-    }
-    kerberos::trust { $trusted_realms:
-      this_realm => $realm,
-      password => $trusted['password'],
+  # is created here for both master and slave
+  require stdlib
+  $kdc_database_dir = dirname($kdc_database_path)
+  if !defined(File[$kdc_database_dir]) {
+    # title used by master.pp to require dir before creating
+    # database
+    file { "krb5-kdc-database-dir":
+      path   => $kdc_database_dir,
+      ensure => "directory",
+      mode   => "0700",
     }
   }
 
-  service { 'krb5-kdc':
+  service { 'krb5kdc':
+    name       => $kdc_service_name,
     ensure     => running,
     enable     => true,
     hasrestart => true,
     hasstatus  => true,
+    require    => File[$kdc_database_dir],
     subscribe  => File['kdc.conf'],
-    require => Exec["create_krb5kdc_principal"],
   }
+
+  # all adding of principals using kadmin.local should be done before the
+  # KDC is started
+  Kerberos::Addprinc<| local == true |> -> Service['krb5kdc']
 
   # installed in kerberos::base if enabled
   Package<| title == 'krb5-pkinit-packages' |> -> Service['krb5kdc']
