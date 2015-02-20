@@ -35,6 +35,7 @@ class kerberos::server::kdc(
   $kadmind_logfile = $kerberos::kadmind_logfile_cfg,
   $kdc_server_packages = $kerberos::kdc_server_packages,
 ) inherits kerberos {
+  # pkinit packages
   include kerberos::base
 
   package { 'krb5-kdc-server-packages' :
@@ -102,4 +103,7 @@ class kerberos::server::kdc(
     subscribe  => File['kdc.conf'],
     require => Exec["create_krb5kdc_principal"],
   }
+
+  # installed in kerberos::base if enabled
+  Package<| title == 'krb5-pkinit-packages' |> -> Service['krb5kdc']
 }

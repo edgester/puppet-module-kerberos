@@ -11,6 +11,12 @@
         master_key_type = <%= @kdc_master_key_type %>
         supported_enctypes = <%= @kdc_supported_enctypes.join(" ") %>
         default_principal_flags = +preauth
+<% if @kdc_pkinit_identity -%>
+        pkinit_identity = <%= @kdc_pkinit_identity %>
+<% end -%>
+<% if @pkinit_anchors -%>
+        pkinit_anchors = <%= @pkinit_anchors %>
+<% end -%>
     }
 
 [logging]

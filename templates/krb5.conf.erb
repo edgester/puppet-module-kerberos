@@ -8,6 +8,9 @@
 	ccache_type = 4
 	forwardable = <%= @forwardable %>
 	proxiable = <%= @proxiable %>
+<% if @pkinit_anchors -%>
+	pkinit_anchors = <%= @pkinit_anchors %>
+<% end -%>
 
         # set to true for OpenAFS to work
         allow_weak_crypto = <%= @allow_weak_crypto %>
