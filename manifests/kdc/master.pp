@@ -33,7 +33,7 @@ class kerberos::kdc::master (
   if $kdc_database_password {
     $db_password = $kdc_database_password
   } else {
-    $db_password = trocla("kdc_database_password", "plain")
+    $db_password = fail("kdc_data_password must be set")
   }
 
   exec { "create_krb5kdc_principal":
