@@ -89,6 +89,9 @@
 # $kdc_trusted_realms
 #   Principals and realm trusts to be created on the master.
 #
+# $kadmind_enable
+#   Whether to actually enable kadmind.
+#
 # $kadmind_acls
 #   ACLs for for the admin service.
 #
@@ -97,6 +100,10 @@
 # $kdc_server_packages
 # $kadmin_server_packages
 #   Package names.
+#
+# $kdc_service_name
+# $kadmin_service_name
+#   Service names.
 #
 # === References
 #
@@ -155,6 +162,7 @@ class kerberos(
   $kdc_principals = {},
   $kdc_trusted_realms = {},
 
+  $kadmind_enable = true,
   $kadmind_acls = { "*/admin@$realm" => '*' },
 
   # packages
@@ -162,6 +170,10 @@ class kerberos(
   $client_packages = $kerberos::params::client_packages,
   $kdc_server_packages = $kerberos::params::kdc_server_packages,
   $kadmin_server_packages = $kerberos::params::kadmin_server_packages,
+
+  # service names
+  $kdc_service_name = $kerberos::params::kdc_service_name,
+  $kadmin_service_name = $kerberos::params::kadmin_service_name,
 ) inherits kerberos::params {
   $kdc_logfile_cfg = $kdc_logfile ? {
     undef => undef,
@@ -188,7 +200,6 @@ class kerberos(
   }
 
   if $master {
-    include kerberos::server::kdc
-    include kerberos::server::kadmind
+    include kerberos::kdc::master
   }
 }
