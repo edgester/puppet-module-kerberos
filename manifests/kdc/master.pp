@@ -33,18 +33,18 @@ class kerberos::kdc::master (
   if $kdc_database_password {
     $db_password = $kdc_database_password
   } else {
-    $db_password = fail("kdc_data_password must be set")
+    $db_password = fail('kdc_data_password must be set')
   }
 
-  exec { "create_krb5kdc_principal":
-    command => "$kdb5_util_path -r $realm -P \'$db_password\' create -s",
-    creates => "$kdc_database_path",
+  exec { 'create_krb5kdc_principal':
+    command => "${kdb5_util_path} -r ${realm} -P \'${db_password}\' create -s",
+    creates => $kdc_database_path,
     require => [ File['krb5-kdc-database-dir', 'kdc.conf'], ],
   }
 
   # Look up our users in hiera. Create a principal for each one listed
   # for this realm.
-  $kerberos_principals = hiera_hash("kerberos::principals", $kdc_principals)
+  $kerberos_principals = hiera_hash('kerberos::principals', $kdc_principals)
   create_resources('kerberos::addprinc', $kerberos_principals)
 
   # KDC database must be created before we can start the KDC service and it
