@@ -1,4 +1,4 @@
-# A puppet module for managing MIT Kerberos clients and servers
+# A puppet module for managing MIT Kerberos clients and servers  [![Build Status](https://travis-ci.org/edgester/puppet-module-kerberos.svg?branch=master)](https://travis-ci.org/edgester/puppet-module-kerberos)
 
 License
 -------
