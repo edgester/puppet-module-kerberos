@@ -168,10 +168,10 @@ class kerberos(
   $kdc_trusted_realms = {},
 
   $kadmind_enable = true,
-  $kadmind_acls = { "*/admin@$realm" => '*' },
+  $kadmind_acls = { "*/admin@${realm}" => '*' },
 
-  $host_ticket_cache_ccname = "/var/lib/puppet/krb5cc.puppet",
-  $host_ticket_cache_service = "kadmin/admin",
+  $host_ticket_cache_ccname = '/var/lib/puppet/krb5cc.puppet',
+  $host_ticket_cache_service = 'kadmin/admin',
   $host_ticket_cache_principal = $fqdn,
 
   # packages
@@ -186,22 +186,22 @@ class kerberos(
 ) inherits kerberos::params {
   $kdc_logfile_cfg = $kdc_logfile ? {
     undef => undef,
-    default => regsubst($kdc_logfile, "^/", "FILE:/")
+    default => regsubst($kdc_logfile, '^/', 'FILE:/')
   }
 
   $kadmind_logfile_cfg = $kadmind_logfile ? {
     undef => undef,
-    default => regsubst($kadmind_logfile, "^/", "FILE:/")
+    default => regsubst($kadmind_logfile, '^/', 'FILE:/')
   }
 
   $pkinit_anchors_cfg = $pkinit_anchors ? {
     undef => undef,
-    default => regsubst($pkinit_anchors, "^/", "FILE:/")
+    default => regsubst($pkinit_anchors, '^/', 'FILE:/')
   }
 
   $kdc_pkinit_identity_cfg = $kdc_pkinit_identity ? {
     undef => undef,
-    default => regsubst($kdc_pkinit_identity, "^/", "FILE:/")
+    default => regsubst($kdc_pkinit_identity, '^/', 'FILE:/')
   }
 
   if $client {
