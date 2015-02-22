@@ -29,7 +29,7 @@ class kerberos::server::kadmind (
   require stdlib
   $kadm5_acl_dir = dirname($kadm5_acl_path)
   if !defined(File[$kadm5_acl_dir]) {
-    file { $kadm5_acl_dir: ensure => "directory" }
+    file { $kadm5_acl_dir: ensure => 'directory' }
   }
 
   file { 'kadm5.acl':
@@ -43,12 +43,12 @@ class kerberos::server::kadmind (
   }
 
   service { 'kadmind':
-    name       => $kadmin_service_name,
     ensure     => running,
+    name       => $kadmin_service_name,
     enable     => true,
     hasrestart => true,
     hasstatus  => true,
-    require    => Exec["create_krb5kdc_principal"],
+    require    => Exec['create_krb5kdc_principal'],
     subscribe  => [ File['kdc.conf', 'kadm5.acl'], Exec['create_krb5kdc_principal'] ],
   }
 
