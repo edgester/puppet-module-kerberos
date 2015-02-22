@@ -170,7 +170,7 @@ class kerberos(
   $kadmind_enable = true,
   $kadmind_acls = { "*/admin@$realm" => '*' },
 
-  $host_ticket_cache_ccname = "/tmp/krb5cc.puppet",
+  $host_ticket_cache_ccname = "/var/lib/puppet/krb5cc.puppet",
   $host_ticket_cache_service = "kadmin/admin",
   $host_ticket_cache_principal = $fqdn,
 
