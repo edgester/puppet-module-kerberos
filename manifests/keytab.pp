@@ -9,18 +9,18 @@
 #
 
 define kerberos::keytab($keytab = $title,
-  $mode = "0400", $owner = 0, $group = 0,
+  $mode = '0400', $owner = 0, $group = 0,
   $replace = false,
 ) {
   # TODO: Avoid recreation if already existing but do update if keys get to
   # old...
   file { $keytab:
-    ensure => file,
+    ensure  => file,
     replace => $replace,
-    backup => false,
+    backup  => false,
     content => inline_template('<%= "\x05\x02" %>'),
-    owner => $owner,
-    group => $group,
-    mode => $mode,
+    owner   => $owner,
+    group   => $group,
+    mode    => $mode,
   }
 }
