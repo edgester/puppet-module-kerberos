@@ -1,7 +1,4 @@
-Kerberos
-========
-
-This is a puppet module for managing Kerberos clients and servers running MIT Kerberos
+# A puppet module for managing MIT Kerberos clients and servers
 
 License
 -------
