@@ -38,16 +38,16 @@ class kerberos::server::kdc (
   if !defined(File[$kdc_database_dir]) {
     # title used by master.pp to require dir before creating
     # database
-    file { "krb5-kdc-database-dir":
+    file { 'krb5-kdc-database-dir':
+      ensure => 'directory',
       path   => $kdc_database_dir,
-      ensure => "directory",
-      mode   => "0700",
+      mode   => '0700',
     }
   }
 
   service { 'krb5kdc':
-    name       => $kdc_service_name,
     ensure     => running,
+    name       => $kdc_service_name,
     enable     => true,
     hasrestart => true,
     hasstatus  => true,
