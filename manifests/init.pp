@@ -95,6 +95,11 @@
 # $kadmind_acls
 #   ACLs for for the admin service.
 #
+# $host_ticket_cache_ccname
+# $host_ticket_cache_service
+# $host_ticket_cache_principal
+#   When creating a ticket cache for use by kadmin use these parameters.
+#
 # $pkinit_packages
 # $client_packages
 # $kdc_server_packages
@@ -164,6 +169,10 @@ class kerberos(
 
   $kadmind_enable = true,
   $kadmind_acls = { "*/admin@$realm" => '*' },
+
+  $host_ticket_cache_ccname = "/tmp/krb5cc.puppet",
+  $host_ticket_cache_service = "kadmin/admin",
+  $host_ticket_cache_principal = $fqdn,
 
   # packages
   $pkinit_packages = $kerberos::params::pkinit_packages,
