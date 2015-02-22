@@ -8,34 +8,34 @@
 # Michael Weiser <michael.weiser@gmx.de>
 #
 define kerberos::ticket_cache ($ccname = $title,
-    $principal = "",
+    $principal = '',
     $keytab = undef,
     $service = undef,
     $pkinit = false,
-    $pkinit_cert = "/var/lib/puppet/ssl/certs/${fqdn}.pem",
-    $pkinit_key = "/var/lib/puppet/ssl/private_keys/${fqdn}.pem") {
+    $pkinit_cert = "/var/lib/puppet/ssl/certs/${::fqdn}.pem",
+    $pkinit_key = "/var/lib/puppet/ssl/private_keys/${::fqdn}.pem") {
   # this needs to be a client in order to run kinit and kadmin
   include kerberos::client
 
-  $kinit = "kinit"
+  $kinit = 'kinit'
   $keytab_par = $keytab ? {
-    undef   => "",
-    default => " -k -t '$keytab'"
+    undef   => '',
+    default => " -k -t '${keytab}'"
   }
 
   $pkinit_par = $pkinit ? {
-    undef   => "",
+    undef   => '',
     default => " -X 'X509_user_identity=FILE:${pkinit_cert},${pkinit_key}'"
   }
 
   $service_par = $service ? {
-    undef   => "",
-    default => "-S '$service'"
+    undef   => '',
+    default => "-S '${service}'"
   }
 
-  exec { "ticket_cache_$title":
-    command => "kinit -c '$ccname' $keytab_par $pkinit_par $service_par $principal",
-    path    => "/usr/bin",
+  exec { "ticket_cache_${title}":
+    command => "kinit -c '${ccname}' ${keytab_par} ${pkinit_par} ${service_par} ${principal}",
+    path    => '/usr/bin',
     require => [ Package['krb5-client-packages'], File['krb5.conf'] ],
     # always recreate (for now) to avoid expired tickets
     # creates => $ccname
