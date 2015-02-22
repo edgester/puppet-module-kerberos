@@ -32,7 +32,7 @@ class kerberos::server::base (
   require stdlib
   $kdc_conf_dir = dirname($kdc_conf_path)
   if !defined(File[$kdc_conf_dir]) {
-    file { $kdc_conf_dir: ensure => "directory" }
+    file { $kdc_conf_dir: ensure => 'directory' }
   }
 
   file { 'kdc.conf':
