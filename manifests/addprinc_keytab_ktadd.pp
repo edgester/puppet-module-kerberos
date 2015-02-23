@@ -9,17 +9,17 @@
 # Michael Weiser <michael.weiser@gmx.de>
 #
 define kerberos::addprinc_keytab_ktadd(
-  $keytab = regsubst($title, "@.*$", ""),
-  $principal = regsubst($title, "^[^@]*@", ""),
+  $keytab = regsubst($title, '@.*$', ''),
+  $principal = regsubst($title, '^[^@]*@', ''),
   $local = true, $kadmin_ccache = undef, $kadmin_keytab = undef,
   $kadmin_tries = undef, $kadmin_try_sleep = undef,
   # only here for host_keytab - define keytab directly if specific permissions
   # are desired
-  $keytab_owner = 0, $keytab_group = 0, $keytab_mode = "0400"
+  $keytab_owner = 0, $keytab_group = 0, $keytab_mode = '0400'
 ) {
   if $local == false {
     include kerberos::host_ticket_cache
-    Kerberos::Ticket_cache["krb5-cache-puppet"] ->
+    Kerberos::Ticket_cache['krb5-cache-puppet'] ->
       Kerberos::Addprinc[$principal]
   }
 
@@ -28,11 +28,11 @@ define kerberos::addprinc_keytab_ktadd(
   # functions to do multiple principals per keytab in one go.
   if !defined(Kerberos::Addprinc[$principal]) {
     kerberos::addprinc { $principal:
-      local => $local,
+      local         => $local,
       kadmin_ccache => $kadmin_ccache,
-      keytab => $kadmin_keytab,
-      tries => $kadmin_tries,
-      try_sleep => $kadmin_try_sleep,
+      keytab        => $kadmin_keytab,
+      tries         => $kadmin_tries,
+      try_sleep     => $kadmin_try_sleep,
     }
   }
 
@@ -40,24 +40,24 @@ define kerberos::addprinc_keytab_ktadd(
     kerberos::keytab { $keytab:
       owner => $keytab_owner,
       group => $keytab_group,
-      mode => $keytab_mode,
+      mode  => $keytab_mode,
     }
   }
 
-  $ktadd = "$keytab@$principal"
+  $ktadd = "${keytab}@${principal}"
   if !defined(Kerberos::Ktadd[$ktadd]) {
-    kerberos::ktadd { "$ktadd":
-      keytab => $keytab,
-      principal => $principal,
-      local => $local,
-      kadmin_ccache => $kadmin_ccache,
-      kadmin_keytab => $kadmin_keytab,
-      kadmin_tries => $kadmin_tries,
+    kerberos::ktadd { $ktadd:
+      keytab           => $keytab,
+      principal        => $principal,
+      local            => $local,
+      kadmin_ccache    => $kadmin_ccache,
+      kadmin_keytab    => $kadmin_keytab,
+      kadmin_tries     => $kadmin_tries,
       kadmin_try_sleep => $kadmin_try_sleep,
     }
   }
 
   Kerberos::Addprinc[$principal] ->
     Kerberos::Keytab[$keytab] ->
-    Kerberos::Ktadd["$ktadd"]
+    Kerberos::Ktadd[$ktadd]
 }
