@@ -1,8 +1,10 @@
 require 'spec_helper'
 describe 'kerberos' do
   
-  let(:facts) { {:operatingsystem => 'Debian'} }
   context 'with defaults for all parameters' do
+    let(:facts) { {:operatingsystem => 'Debian'} }
     it { should contain_class('kerberos') }
+    it { should_not contain_class('kerberos::client') }
+    it { should_not contain_class('kerberos::master') }
   end
 end
