@@ -14,17 +14,11 @@
 # Copyright 2013 Jason Edgecombe, unless otherwise noted.
 #
 class kerberos::server::kadmind (
-  $kadmin_server_packages = $kerberos::kadmin_server_packages,
   $kadm5_acl_path = $kerberos::kadm5_acl_path,
   $kadmind_acls = $kerberos::kadmind_acls,
   $kadmin_service_name = $kerberos::kadmin_service_name,
 ) inherits kerberos {
-  include kerberos::server::base
-
-  package { 'krb5-kadmind-server-packages' :
-    ensure => present,
-    name   => $kadmin_server_packages,
-  }
+  include kerberos::server::kadmind_kprop
 
   require stdlib
   $kadm5_acl_dir = dirname($kadm5_acl_path)

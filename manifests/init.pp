@@ -16,8 +16,17 @@
 # $kadm5_acl_path = $kerberos::params::kadm5_acl_path,
 #   Path to the admin service ACL file.
 #
+# $kpropd_acl_path = $kerberos::params::kpropd_acl_path,
+#   Path to the database replication daemon ACL file.
+#
+# $kprop_cron_path = $kerberos::params::kprop_cron_path,
+#   Path to the database replication push cron script.
+#
 # $kdb5_util_path = $kerberos::params::kdb5_util_path,
 #   Path of kdb5_util used for creating databases.
+#
+# $kprop_path = $kerberos::params::kprop_path,
+#   Path to the kprop utility.
 #
 # Settings in files:
 #
@@ -85,6 +94,34 @@
 #   SYSLOG:INFO:DAEMON
 #   DEVICE=/dev/tty04
 #
+# Yet to try:
+# $kdc_iprop_port
+#   Port to use for incremental replication (listened on by the kpropd on the
+#   slave and connected to by the master?).
+#
+# $kdc_iprop_logfile
+#   Logfile to use for incremental replication (on the master?).
+#
+# $kprop_cron_hour
+# $kprop_cron_minute
+#   When to run the kprop cron job.
+#
+# $kprop_principal
+# $kprop_keytab
+#   Principal and keytab to be used by kprop for authenticating to kpropd on
+#   the slave.
+#
+# $kpropd_iprop_resync_timeout
+#   ?
+#
+# $kpropd_principal
+# $kpropd_keytab
+#   What principal and keytab kpropd should authentication for and verify it
+#   with.
+#
+# $kpropd_master_principal
+#   What principals to allow to update the database on this slave.
+#
 # $kdc_principals
 # $kdc_trusted_realms
 #   Principals and realm trusts to be created on the master.
@@ -95,6 +132,9 @@
 # $kadmind_acls
 #   ACLs for for the admin service.
 #
+# $kdc_slaves
+#   List of slaves of this KDC (may be a slave itself).
+#
 # $host_ticket_cache_ccname
 # $host_ticket_cache_service
 # $host_ticket_cache_principal
@@ -104,10 +144,12 @@
 # $client_packages
 # $kdc_server_packages
 # $kadmin_server_packages
+# $kpropd_server_packages
 #   Package names.
 #
 # $kdc_service_name
 # $kadmin_service_name
+# $kpropd_service_name
 #   Service names.
 #
 # === References
@@ -131,12 +173,16 @@ class kerberos(
   # roles
   $client = false,
   $master = false,
+  $slave = false,
 
   # paths to configuration files
   $krb5_conf_path = $kerberos::params::krb5_conf_path,
   $kdc_conf_path = $kerberos::params::kdc_conf_path,
   $kadm5_acl_path = $kerberos::params::kadm5_acl_path,
+  $kpropd_acl_path = $kerberos::params::kpropd_acl_path,
+  $kprop_cron_path = $kerberos::params::kprop_cron_path,
   $kdb5_util_path = $kerberos::params::kdb5_util_path,
+  $kprop_path = $kerberos::params::kprop_path,
 
   # settings in files
   $realm = 'EXAMPLE.COM',
@@ -159,9 +205,21 @@ class kerberos(
   $kdc_supported_enctypes = ['aes256-cts:normal', 'arcfour-hmac:normal', 'des3-hmac-sha1:normal' ],
   $kdc_pkinit_identity = undef,
   $kdc_logfile = $kerberos::params::kdc_logfile,
+  $kdc_iprop_port = undef,
+  $kdc_iprop_logfile = undef,
 
   # no kadm5.conf, so it's in kdc.conf
   $kadmind_logfile = $kerberos::params::kadmind_logfile,
+
+  $kprop_cron_hour = '*',
+  $kprop_cron_minute = '*/5',
+  $kprop_principal = "host/${fqdn}",
+  $kprop_keytab = '/etc/krb5.keytab',
+
+  $kpropd_iprop_resync_timeout = undef,
+  $kpropd_principal = "host/${fqdn}",
+  $kpropd_keytab = '/etc/krb5.keytab',
+  $kpropd_master_principal = undef,
 
   # settings to be implemented via logic
   $kdc_principals = {},
@@ -174,16 +232,25 @@ class kerberos(
   $host_ticket_cache_service = 'kadmin/admin',
   $host_ticket_cache_principal = $fqdn,
 
+  $kdc_slaves = undef,
+
   # packages
   $pkinit_packages = $kerberos::params::pkinit_packages,
   $client_packages = $kerberos::params::client_packages,
   $kdc_server_packages = $kerberos::params::kdc_server_packages,
   $kadmin_server_packages = $kerberos::params::kadmin_server_packages,
+  $kpropd_server_packages = $kerberos::params::kpropd_server_packages,
 
   # service names
   $kdc_service_name = $kerberos::params::kdc_service_name,
   $kadmin_service_name = $kerberos::params::kadmin_service_name,
+  $kpropd_service_name = $kerberos::params::kpropd_service_name,
 ) inherits kerberos::params {
+  $kpropd_master_principal_cfg = $kpropd_master_principal ? {
+    default => $kpropd_master_principal,
+    undef => "host/${master_kdc}@${realm}",
+  }
+
   $kdc_logfile_cfg = $kdc_logfile ? {
     undef => undef,
     default => regsubst($kdc_logfile, '^/', 'FILE:/')
@@ -210,5 +277,9 @@ class kerberos(
 
   if $master {
     include kerberos::kdc::master
+  }
+
+  if $slave {
+    include kerberos::kdc::slave
   }
 }
