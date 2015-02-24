@@ -5,6 +5,6 @@ describe 'kerberos' do
     let(:facts) { {:operatingsystem => 'Debian'} }
     it { should contain_class('kerberos') }
     it { should_not contain_class('kerberos::client') }
-    it { should_not contain_class('kerberos::master') }
+    it { should_not contain_class('kerberos::kdc::master') }
   end
 end
