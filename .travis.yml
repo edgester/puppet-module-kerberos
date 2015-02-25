@@ -5,7 +5,6 @@ rvm:
 matrix:
   allow_failures:
     - rvm: 2.2.0
-      env: PUPPET_VERSION=3.7.4
 script:
   - "bundle exec rake lint"
   - "bundle exec rake spec"
