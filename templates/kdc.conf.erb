@@ -17,6 +17,15 @@
 <% if @pkinit_anchors -%>
         pkinit_anchors = <%= @pkinit_anchors %>
 <% end -%>
+<% if @kdc_iprop_port -%>
+        iprop_port = <%= @kdc_iprop_port %>
+<% end -%>
+<% if @kdc_iprop_logfile -%>
+        iprop_logfile = <%= @kdc_iprop_logfile %>
+<% end -%>
+<% if @kdc_iprop_resync_timeout -%>
+        iprop_resync_timeout = <%= @kdc_iprop_resync_timeout %>
+<% end -%>
     }
 
 [logging]

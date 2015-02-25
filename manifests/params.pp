@@ -13,7 +13,6 @@
 # Copyright 2013 Jason Edgecombe, unless otherwise noted.
 #
 class kerberos::params {
-
   case $::operatingsystem {
     Ubuntu, Debian: {
       $client_packages    = [ 'krb5-user' ]
@@ -23,10 +22,14 @@ class kerberos::params {
 
       $kdc_service_name       = 'krb5-kdc'
       $kadmin_service_name    = 'krb5-admin-server'
+      $kpropd_service_name    = 'krb5-kpropd'
 
       $krb5_conf_path         = '/etc/krb5.conf'
       $kdc_conf_path          = '/etc/krb5kdc/kdc.conf'
       $kadm5_acl_path         = '/etc/krb5kdc/kadm5.acl'
+      $kpropd_acl_path        = '/etc/krb5kdc/kpropd.acl'
+      $kprop_cron_path        = '/etc/krb5kdc/kprop.cron'
+      $kprop_path             = '/usr/sbin/kprop'
       $kdb5_util_path         = '/usr/sbin/kdb5_util'
 
       $kdc_database_path      = '/var/lib/krb5kdc/principal'

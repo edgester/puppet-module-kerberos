@@ -1,7 +1,8 @@
 # === Class: kerberos::kdc::master
 #
 # Kerberos master kdc: Sets up the server daemons using kerberos::server::kdc
-# and kerberos::server::kadmind classes.
+# and kerberos::server::kadmind classes. Creates the master database and adds a
+# cron job for updating the slaves.
 #
 # === Authors
 #
@@ -16,6 +17,7 @@
 #
 class kerberos::kdc::master (
   $kadmind_enable = $kerberos::kadmind_enable,
+  $kdc_slaves = $kerberos::kdc_slaves,
   $kdc_database_password = $kerberos::kdc_database_password,
   $kdc_principals = $kerberos::kdc_principals,
   $kdc_trusted_realms = $kerberos::kdc_trusted_realms,
@@ -28,6 +30,11 @@ class kerberos::kdc::master (
   # convenience setting for enabling and disabling kadmind
   if $kadmind_enable {
     include kerberos::server::kadmind
+  }
+
+  # set up kprop cron job if we have slaves
+  if $kdc_slaves {
+    include kerberos::server::kprop
   }
 
   if $kdc_database_password {

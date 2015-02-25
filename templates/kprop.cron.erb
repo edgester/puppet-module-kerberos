@@ -1,0 +1,14 @@
+#!/bin/sh
+RC=0
+DUMP="<%= @kdc_database_dir %>/kdb_dump"
+<%= @kdb5_util_path %> dump "$DUMP"
+<% @kdc_slaves.each do |slave| -%>
+
+<%= @kprop_path %> -f "$DUMP" <%= slave %>
+if [ $? != 0 ]; then
+  /usr/bin/logger "`basename $0`: failed to replicate krb5 database to <%= slave %>"
+  RC=1
+fi
+<% end -%>
+
+exit $RC

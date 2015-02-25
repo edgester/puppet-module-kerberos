@@ -2,8 +2,8 @@
 #
 # Kerberos kdc service. Installs and starts the KDC service. Uses
 # kerberos::server::base to create kdc.conf. Although it starts the service
-# it does not create a database. Use kerberos::kdc::master
-# to actually set up functioning KDCs.
+# it does not create a database. Use kerberos::kdc::master or
+# kerberos::kdc:slave to actually set up functioning KDCs.
 #
 # === Authors
 #

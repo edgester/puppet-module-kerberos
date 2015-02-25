@@ -48,6 +48,7 @@ following classes:
 
     kerberos::client
     kerberos::kdc::master
+    kerberos::kdc::slave
 
 
 It is best to store passwords in Hiera; that way, you can have a set of test
