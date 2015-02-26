@@ -1,3 +1,10 @@
+# Having section libdefaults in kdc.conf isn't normally done. But doing so and
+# setting the default_ream in it completely removes the need to have krb5.conf
+# set up, allowing to run a KDC without having the Kerberos client configured
+# on that box.
+[libdefaults]
+    default_realm = <%= @realm %>
+
 [kdcdefaults]
     kdc_ports = <%= @kdc_ports %>
 
