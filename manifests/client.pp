@@ -44,6 +44,11 @@ class kerberos::client (
     before => File['krb5.conf'],
   }
 
+  $krb5_conf_dir = dirname($krb5_conf_path)
+  if !defined(File[$krb5_conf_dir]) {
+    file { $krb5_conf_dir: ensure => directory }
+  }
+
   file { 'krb5.conf':
     ensure  => file,
     path    => $krb5_conf_path,
@@ -51,5 +56,6 @@ class kerberos::client (
     mode    => '0644',
     owner   => 0,
     group   => 0,
+    require => File[$krb5_conf_dir],
   }
 }
