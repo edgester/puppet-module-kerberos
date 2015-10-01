@@ -19,7 +19,7 @@ define kerberos::addprinc($principal_name = $title, $password = undef, $flags = 
   if $local {
     # if we're gonna run kadmin.local we better make sure it's
     # installed
-    include kerberos::server::kadmind
+    include kerberos::server::kadmind_kprop
     $kadmin = 'kadmin.local'
   } else {
     # if we're gonna run kadmin we better make sure it's installed
