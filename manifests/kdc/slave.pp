@@ -29,10 +29,8 @@ class kerberos::kdc::slave (
     include kerberos::server::kprop
   }
 
-  if $kdc_database_password {
-    $db_password = $kdc_database_password
-  } else {
-    $db_password = fail('kdc_data_password must be set')
+  if ! $kdc_database_password {
+    fail('kdc_database_password must be set')
   }
 
   # funky: Wait for someone to create our database before starting the KDC. In
@@ -46,7 +44,7 @@ class kerberos::kdc::slave (
     try_sleep => 30,
   } ->
   exec { 'krb5-stash-database-pw':
-    command => "echo '${db_password}' | ${kdb5_util_path} stash",
+    command => "echo '${kdc_database_password}' | ${kdb5_util_path} stash",
     path => [ '/bin', '/usr/bin', '/sbin', '/usr/sbin' ],
     creates => $kdc_stash_path,
   } ~>
