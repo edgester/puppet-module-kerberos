@@ -6,6 +6,7 @@ matrix:
   allow_failures:
     - rvm: 2.2.0
 script:
+  - "bundle exec rake validate"
   - "bundle exec rake lint"
   - "bundle exec rake spec"
 env:
