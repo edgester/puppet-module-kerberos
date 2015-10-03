@@ -32,7 +32,7 @@ class kerberos::client (
   if empty($domain_realm) {
     $realm_in_lowercase = downcase($realm)
     $default_domain = ".${realm_in_lowercase}"
-    $domain_realm_list = { "$default_domain" => "$realm" }
+    $domain_realm_list = { "${default_domain}" => $realm }
   }
   else {
     $domain_realm_list = $domain_realm
