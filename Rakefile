@@ -17,3 +17,6 @@ task :validate do
     sh "erb -P -x -T '-' #{template} | ruby -c"
   end
 end
+
+desc 'This runs the tasks for commit: validate, lint, spec'
+task :check => ["validate", "lint", "spec"]
