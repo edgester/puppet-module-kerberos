@@ -2,7 +2,7 @@
 #
 # === Authors
 #
-# Author Name <jason@rampaginggeek.com>
+# Jason Edgecombe <jason@rampaginggeek.com>
 # Additions by Michael Weiser <michael.weiser@gmx.de>
 #
 # === Copyright

@@ -4,7 +4,7 @@
 #
 # === Authors
 #
-# Author Name <jason@rampaginggeek.com>
+# Jason Edgecombe <jason@rampaginggeek.com>
 #
 # Additions by <greg.1.anderson@greeknowe.org>
 # Additions by Michael Weiser <michael.weiser@gmx.de>
