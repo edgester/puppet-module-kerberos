@@ -16,3 +16,4 @@ notifications:
   email:
     on_failure: always
 gemfile: Gemfile
+sudo: false
