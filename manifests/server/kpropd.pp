@@ -26,6 +26,12 @@ class kerberos::server::kpropd (
 ) inherits kerberos::params {
   include kerberos::server::kdc
 
+  if $kerberos_bootstrap {
+    $kadmin_try_sleep = 60
+  } else {
+    $kadmin_try_sleep = 10
+  }
+
   # if we have pkinit we can automatically create the keytab
   $ktadd = "${kpropd_keytab}@${kpropd_principal}"
   if $pkinit_anchors and !defined(Kerberos::Addprinc_keytab_ktadd[$ktadd]) {
@@ -35,7 +41,7 @@ class kerberos::server::kpropd (
       # if we're bootstrapping the master might not be up yet and even if not
       # it might just be rebooting
       kadmin_tries     => 30,
-      kadmin_try_sleep => $kerberos_bootstrap ? { '1' => 60, default => 10 },
+      kadmin_try_sleep => $kadmin_try_sleep,
     } -> Service['kpropd']
   }
 
@@ -49,8 +55,8 @@ class kerberos::server::kpropd (
   }
 
   service { 'kpropd':
-    name       => $kpropd_service_name,
     ensure     => running,
+    name       => $kpropd_service_name,
     enable     => true,
     hasrestart => true,
     hasstatus  => true,
