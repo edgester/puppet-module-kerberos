@@ -37,6 +37,12 @@ define kerberos::ticket_cache ($ccname = $title,
     default => "-S '${service}'"
   }
 
+  if $kerberos_bootstrap {
+    $try_sleep =  60
+  } else {
+    $try_sleep = 10
+  }
+
   exec { "ticket_cache_${title}":
     command   => "kinit -c '${ccname}' ${keytab_par} ${pkinit_par} ${service_par} ${principal}",
     path      => '/usr/bin',
@@ -46,6 +52,6 @@ define kerberos::ticket_cache ($ccname = $title,
     # if we're bootstrapping no KDC might be up yet and even if not
     # it might just be rebooting
     tries     => 30,
-    try_sleep => $kerberos_bootstrap ? { '1' => 60, default => 10 },
+    try_sleep => $try_sleep,
   }
 }
