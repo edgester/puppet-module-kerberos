@@ -37,13 +37,13 @@ class kerberos::kdc::master (
     include kerberos::server::kprop
   }
 
-  if ! $kdc_database_password {
+  if ! $kerberos::kdc_database_password {
     fail('kdc_database_password must be set')
   }
 
   exec { 'create_krb5kdc_principal':
-    command => "${kdb5_util_path} -r ${realm} -P \'${kdc_database_password}\' create -s",
-    creates => $kdc_database_path,
+    command => "${kerberos::kdb5_util_path} -r ${kerberos::realm} -P \'${kerberos::kdc_database_password}\' create -s",
+    creates => $kerberos::kdc_database_path,
     require => [ File['krb5-kdc-database-dir', 'kdc.conf'], ],
   }
 
@@ -68,11 +68,11 @@ class kerberos::kdc::master (
   $trusted = hiera_hash('kerberos::trusted_realms', $kdc_trusted_realms)
   if $trusted {
     if $trusted['realms'] {
-      $trusted_realms = delete($trusted['realms'], $realm)
+      $trusted_realms = delete($trusted['realms'], $kerberos::realm)
     }
     if $trusted_realms {
       kerberos::trust { $trusted_realms:
-        this_realm => $realm,
+        this_realm => $kerberos::realm,
         password   => $trusted['password'],
       }
     }

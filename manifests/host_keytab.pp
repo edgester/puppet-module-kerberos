@@ -14,11 +14,11 @@ define kerberos::host_keytab($princs = [ $title ], $spnego = false,
   include kerberos
 
   require stdlib
-  $actual_principals = suffix($princs, "/${fqdn}")
+  $actual_principals = suffix($princs, "/${::fqdn}")
   $keytab = "/etc/${title}.keytab"
   $ktadds = prefix($actual_principals, "${keytab}@")
   kerberos::addprinc_keytab_ktadd { $ktadds:
-    local => false,
+    local         => false,
     keytab_owner  => $owner,
     keytab_group  => $group,
     keytab_mode   => $mode,
@@ -37,11 +37,11 @@ define kerberos::host_keytab($princs = [ $title ], $spnego = false,
 
     # make a separate keytab for HTTP, but only once
     $keytab_http = '/etc/hadoop-spnego.keytab'
-    $principal_http = "HTTP/${fqdn}"
+    $principal_http = "HTTP/${::fqdn}"
     $ktadd_http = "${keytab_http}@${principal_http}"
     if !defined(Kerberos::Addprinc_keytab_ktadd[$ktadd_http]) {
       kerberos::addprinc_keytab_ktadd { $ktadd_http:
-        local => false,
+        local         => false,
         kadmin_ccache => $kerberos::host_ticket_cache_ccname,
       }
     }
@@ -56,7 +56,7 @@ define kerberos::host_keytab($princs = [ $title ], $spnego = false,
 rkt ${keytab_http}
 wkt ${keytab}
 EOF",
-      path    => [ "/bin", "/usr/bin" ],
+      path    => [ '/bin', '/usr/bin' ],
       unless  => "klist -k '${keytab}' | grep ' ${principal_http}@'",
     } ->
     Kerberos::Ktadd[$ktadds]

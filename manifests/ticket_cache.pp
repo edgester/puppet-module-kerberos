@@ -38,14 +38,14 @@ define kerberos::ticket_cache ($ccname = $title,
   }
 
   exec { "ticket_cache_${title}":
-    command => "kinit -c '${ccname}' ${keytab_par} ${pkinit_par} ${service_par} ${principal}",
-    path    => '/usr/bin',
-    require => [ Package['krb5-client-packages'], File['krb5.conf'] ],
+    command   => "kinit -c '${ccname}' ${keytab_par} ${pkinit_par} ${service_par} ${principal}",
+    path      => '/usr/bin',
+    require   => [ Package['krb5-client-packages'], File['krb5.conf'] ],
     # always recreate (for now) to avoid expired tickets
     # creates => $ccname
     # if we're bootstrapping no KDC might be up yet and even if not
     # it might just be rebooting
-    tries => 30,
+    tries     => 30,
     try_sleep => $kerberos_bootstrap ? { '1' => 60, default => 10 },
   }
 }

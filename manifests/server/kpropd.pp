@@ -30,11 +30,11 @@ class kerberos::server::kpropd (
   $ktadd = "${kpropd_keytab}@${kpropd_principal}"
   if $pkinit_anchors and !defined(Kerberos::Addprinc_keytab_ktadd[$ktadd]) {
     kerberos::addprinc_keytab_ktadd { $ktadd:
-      local => false,
-      kadmin_ccache => $host_ticket_cache_ccname,
+      local            => false,
+      kadmin_ccache    => $host_ticket_cache_ccname,
       # if we're bootstrapping the master might not be up yet and even if not
       # it might just be rebooting
-      kadmin_tries => 30,
+      kadmin_tries     => 30,
       kadmin_try_sleep => $kerberos_bootstrap ? { '1' => 60, default => 10 },
     } -> Service['kpropd']
   }

@@ -37,7 +37,7 @@ class kerberos::server::kprop (
   $ktadd = "${kprop_keytab}@${kprop_principal}"
   if $pkinit_anchors and !defined(Kerberos::Addprinc_keytab_ktadd[$ktadd]) {
     kerberos::addprinc_keytab_ktadd { $ktadd:
-      local => false,
+      local         => false,
       kadmin_ccache => $host_ticket_cache_ccname,
     } -> Cron['kprop']
   }

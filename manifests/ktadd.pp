@@ -11,8 +11,8 @@
 # infer principal and keytab file names from title if not given explicitly,
 # syntax: <keytab>@<principal_possibly_containing_more_@s>
 define kerberos::ktadd(
-  $keytab = regsubst($title, "@.*$", ""),
-  $principal = regsubst($title, "^[^@]*@", ""),
+  $keytab = regsubst($title, '@.*$', ''),
+  $principal = regsubst($title, '^[^@]*@', ''),
   $local = true, $reexport = false,
   $kadmin_ccache = undef, $kadmin_keytab = undef,
   $kadmin_tries = undef, $kadmin_try_sleep = undef,

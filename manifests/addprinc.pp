@@ -51,7 +51,7 @@ define kerberos::addprinc($principal_name = $title, $password = undef, $flags = 
         Exec['create_krb5kdc_principal'], ],
       default => [ Package['krb5-client-packages'], File['krb5.conf'] ],
     },
-    tries     => $kadmin_tries,
-    try_sleep => $kadmin_try_sleep,
+    tries     => $kerberos::kadmin_tries,
+    try_sleep => $kerberos::kadmin_try_sleep,
   }
 }

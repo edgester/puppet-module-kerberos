@@ -38,14 +38,14 @@ class kerberos::kdc::slave (
   # we're bootstrapping and the database doesn't exist yet.
   Service['kpropd'] ->
   exec { 'krb5-wait-for-database':
-    command   => "test -f '$kdc_database_path'",
+    command   => "test -f '${kdc_database_path}'",
     path      => [ '/bin', '/usr/bin' ],
     tries     => 10,
     try_sleep => 30,
   } ->
   exec { 'krb5-stash-database-pw':
-    command => "echo '${kdc_database_password}' | ${kdb5_util_path} stash",
-    path => [ '/bin', '/usr/bin', '/sbin', '/usr/sbin' ],
+    command => "echo '${kerberos::kdc_database_password}' | ${kerberos::kdb5_util_path} stash",
+    path    => [ '/bin', '/usr/bin', '/sbin', '/usr/sbin' ],
     creates => $kdc_stash_path,
   } ~>
   Service['krb5kdc']

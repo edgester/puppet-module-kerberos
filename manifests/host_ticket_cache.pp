@@ -15,9 +15,9 @@ class kerberos::host_ticket_cache (
   # if this is the KDC, then obviously the machine principals must be
   # created first
   Kerberos::Addprinc<| local == true |> ->
-    Kerberos::Ticket_cache["krb5-cache-puppet"]
+    Kerberos::Ticket_cache['krb5-cache-puppet']
 
-  kerberos::ticket_cache { "krb5-cache-puppet":
+  kerberos::ticket_cache { 'krb5-cache-puppet':
     ccname    => $host_ticket_cache_ccname,
     pkinit    => true,
     principal => $host_ticket_cache_principal,
