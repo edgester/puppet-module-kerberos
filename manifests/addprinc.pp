@@ -21,6 +21,11 @@ define kerberos::addprinc($principal_name = $title, $password = undef, $flags = 
     # installed
     include kerberos::server::kadmind_kprop
     $kadmin = 'kadmin.local'
+
+    $addprinc_exec_require = [
+                              Package['krb5-kadmind-server-packages'],
+                              Exec['create_krb5kdc_principal']
+                              ]
   } else {
     # if we're gonna run kadmin we better make sure it's installed
     # and configured
@@ -36,6 +41,11 @@ define kerberos::addprinc($principal_name = $title, $password = undef, $flags = 
       undef => '',
       default => "-k -t '${keytab}'"
     }
+
+    $addprinc_exec_require = [
+                              Package['krb5-client-packages'],
+                              File['krb5.conf']
+                              ]
   }
 
   $password_par = $password ? {
@@ -46,11 +56,7 @@ define kerberos::addprinc($principal_name = $title, $password = undef, $flags = 
   exec { "add_principal_${principal_name}":
     command   => "${kadmin} ${ccache_par} ${keytab_par} -q 'addprinc ${flags} ${password_par} ${principal_name}'",
     path      => [ '/usr/sbin', '/usr/bin' ],
-    require   => $local ? {
-      true    => [ Package['krb5-kadmind-server-packages'],
-        Exec['create_krb5kdc_principal'], ],
-      default => [ Package['krb5-client-packages'], File['krb5.conf'] ],
-    },
+    require   => $addprinc_exec_require,
     tries     => $kerberos::kadmin_tries,
     try_sleep => $kerberos::kadmin_try_sleep,
   }
