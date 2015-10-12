@@ -21,8 +21,10 @@
 #
 # Copyright 2014 Jason Edgecombe (Copyright assigned by original author)
 #
-define kerberos::trust($trusted_realm = $title, $this_realm = $kerberos::realm, $password =
-'USE_DEFAULTS') {
+define kerberos::trust($trusted_realm = $title,
+  $this_realm = $kerberos::realm,
+  $password = 'USE_DEFAULTS'
+) {
 
   if $password == 'USE_DEFAULTS' {
     fail('Missing required password parameter for kerberos::trust')

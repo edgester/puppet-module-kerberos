@@ -1,6 +1,7 @@
 # === Class: kerberos::server::kpropd
 #
-# Kerberos kpropd service. Installs and starts the kpropd service on a slave KDC.
+# Kerberos kpropd service. Installs and starts the kpropd service on a slave
+# KDC.
 #
 # === Authors
 #
@@ -23,7 +24,7 @@ class kerberos::server::kpropd (
 
   # facter fact
   $kerberos_bootstrap = $::kerberos_bootstrap,
-) inherits kerberos::params {
+) inherits kerberos {
   include kerberos::server::kdc
 
   if $kerberos_bootstrap {

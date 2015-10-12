@@ -12,7 +12,8 @@
 #
 # Copyright 2014 Jason Edgecombe (Copyright assigned by original author)
 #
-define kerberos::addprinc($principal_name = $title, $password = undef, $flags = '',
+define kerberos::addprinc($principal_name = $title,
+  $password = undef, $flags = '',
   $local = true, $kadmin_ccache = undef, $keytab = undef,
   $tries = undef, $try_sleep = undef,
 ) {
@@ -53,8 +54,9 @@ define kerberos::addprinc($principal_name = $title, $password = undef, $flags = 
     default => "-pw ${password}"
   }
 
+  $cmd = "addprinc ${flags} ${password_par} ${principal_name}"
   exec { "add_principal_${principal_name}":
-    command   => "${kadmin} ${ccache_par} ${keytab_par} -q 'addprinc ${flags} ${password_par} ${principal_name}'",
+    command   => "${kadmin} ${ccache_par} ${keytab_par} -q '${cmd}'",
     path      => [ '/usr/sbin', '/usr/bin' ],
     require   => $addprinc_exec_require,
     tries     => $kerberos::kadmin_tries,
