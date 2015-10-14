@@ -17,10 +17,11 @@ define kerberos::ktadd(
   $kadmin_ccache = undef, $kadmin_keytab = undef,
   $kadmin_tries = undef, $kadmin_try_sleep = undef,
 ) {
+  $ktadd = "ktadd_${keytab}_${principal}"
   if $local {
     $kadmin = 'kadmin.local'
-    Package['krb5-kadmind-server-packages'] -> Exec["ktadd_${keytab}_${principal}"]
-    Exec['create_krb5kdc_principal'] -> Exec["ktadd_${keytab}_${principal}"]
+    Package['krb5-kadmind-server-packages'] -> Exec[$ktadd]
+    Exec['create_krb5kdc_principal'] -> Exec[$ktadd]
   } else {
     $kadmin = 'kadmin'
 
@@ -34,8 +35,8 @@ define kerberos::ktadd(
       default => "-k '${kadmin_keytab}'"
     }
 
-    Package['krb5-client-packages'] -> Exec["ktadd_${keytab}_${principal}"]
-    File['krb5.conf'] -> Exec["ktadd_${keytab}_${principal}"]
+    Package['krb5-client-packages'] -> Exec[$ktadd]
+    File['krb5.conf'] -> Exec[$ktadd]
   }
 
   if $reexport {
@@ -44,8 +45,9 @@ define kerberos::ktadd(
     $unless = "klist -k '${keytab}' | grep ' ${principal}@'"
   }
 
+  $cmd = "ktadd -k ${keytab} ${principal}"
   exec { "ktadd_${keytab}_${principal}":
-    command   => "${kadmin} ${ccache_par} ${keytab_par} -q 'ktadd -k ${keytab} ${principal}'",
+    command   => "${kadmin} ${ccache_par} ${keytab_par} -q '${cmd}'",
     unless    => $unless,
     path      => [ '/bin', '/usr/bin', '/usr/bin', '/usr/sbin' ],
     require   => File[$keytab],

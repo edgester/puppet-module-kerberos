@@ -21,7 +21,6 @@ define kerberos::ticket_cache ($ccname = $title,
   # this needs to be a client in order to run kinit and kadmin
   include kerberos::client
 
-  $kinit = 'kinit'
   $keytab_par = $keytab ? {
     undef   => '',
     default => " -k -t '${keytab}'"
@@ -37,14 +36,14 @@ define kerberos::ticket_cache ($ccname = $title,
     default => "-S '${service}'"
   }
 
-  if $kerberos_bootstrap {
-    $try_sleep =  60
-  } else {
-    $try_sleep = 10
+  $try_sleep = $kerberos_bootstrap ? {
+    '1'     => 60,
+    default => 10
   }
 
+  $kinit_cmd = "kinit -c '${ccname}' ${keytab_par} ${pkinit_par} ${service_par}"
   exec { "ticket_cache_${title}":
-    command   => "kinit -c '${ccname}' ${keytab_par} ${pkinit_par} ${service_par} ${principal}",
+    command   => "${kinit_cmd} ${principal}",
     path      => '/usr/bin',
     require   => [ Package['krb5-client-packages'], File['krb5.conf'] ],
     # always recreate (for now) to avoid expired tickets
