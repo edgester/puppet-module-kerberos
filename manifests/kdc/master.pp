@@ -16,8 +16,11 @@
 # Copyright 2013 Jason Edgecombe, unless otherwise noted.
 #
 class kerberos::kdc::master (
+  $realm = $kerberos::realm,
+
   $kadmind_enable = $kerberos::kadmind_enable,
   $kdc_slaves = $kerberos::kdc_slaves,
+  $kdc_database_path = $kerberos::kdc_database_path,
   $kdc_database_password = $kerberos::kdc_database_password,
   $kdc_principals = $kerberos::kdc_principals,
   $kdc_trusted_realms = $kerberos::kdc_trusted_realms,
@@ -37,13 +40,13 @@ class kerberos::kdc::master (
     include kerberos::server::kprop
   }
 
-  if ! $kerberos::kdc_database_password {
+  if ! $kdc_database_password {
     fail('kdc_database_password must be set')
   }
 
   exec { 'create_krb5kdc_principal':
-    command => "${kerberos::kdb5_util_path} -r ${kerberos::realm} -P \'${kerberos::kdc_database_password}\' create -s",
-    creates => $kerberos::kdc_database_path,
+    command => "${kdb5_util_path} -r ${realm} -P \'${kdc_database_password}\' create -s",
+    creates => $kdc_database_path,
     require => [ File['krb5-kdc-database-dir', 'kdc.conf'], ],
   }
 
@@ -68,11 +71,11 @@ class kerberos::kdc::master (
   $trusted = hiera_hash('kerberos::trusted_realms', $kdc_trusted_realms)
   if $trusted {
     if $trusted['realms'] {
-      $trusted_realms = delete($trusted['realms'], $kerberos::realm)
+      $trusted_realms = delete($trusted['realms'], $realm)
     }
     if $trusted_realms {
       kerberos::trust { $trusted_realms:
-        this_realm => $kerberos::realm,
+        this_realm => $realm,
         password   => $trusted['password'],
       }
     }

@@ -19,6 +19,7 @@ class kerberos::kdc::slave (
   $kdc_database_path = $kerberos::kdc_database_path,
   $kdc_database_password = $kerberos::kdc_database_password,
   $kdc_stash_path = $kerberos::kdc_stash_path,
+  $kdb5_util_path = $kerberos::kdb5_util_path,
 ) inherits kerberos {
   # at a minimum a slave has krb5kdc and kpropd server
   include kerberos::server::kdc
@@ -44,7 +45,7 @@ class kerberos::kdc::slave (
     try_sleep => 30,
   } ->
   exec { 'krb5-stash-database-pw':
-    command => "echo '${kerberos::kdc_database_password}' | ${kerberos::kdb5_util_path} stash",
+    command => "echo '${kdc_database_password}' | ${kdb5_util_path} stash",
     path    => [ '/bin', '/usr/bin', '/sbin', '/usr/sbin' ],
     creates => $kdc_stash_path,
   } ~>
