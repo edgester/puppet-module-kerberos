@@ -26,10 +26,12 @@ class kerberos::server::kdc (
   # kdc.conf
   include kerberos::server::base
 
-  package { 'krb5-kdc-server-packages' :
-    ensure => present,
-    name   => $kdc_server_packages,
-    before => File['kdc.conf'],
+  if (!defined(Package[$kdc_server_packages])) {
+    package { 'krb5-kdc-server-packages' :
+      ensure => present,
+      name   => $kdc_server_packages,
+      before => File['kdc.conf'],
+    }
   }
 
   # is created here for both master and slave
