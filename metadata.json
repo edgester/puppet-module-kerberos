@@ -7,6 +7,14 @@
   "source": "https://github.com/edgester/puppet-module-kerberos.git",
   "project_page": "https://github.com/edgester/puppet-module-kerberos",
   "issues_url": "https://github.com/edgester/puppet-module-kerberos/issues",
+  "operatingsystem_support": [
+    {
+    "operatingsystem": "Debian"
+    },
+    {
+    "operatingsystem": "Ubuntu"
+    }
+   ],
   "dependencies": [
     {
       "name": "puppetlabs-stdlib",
