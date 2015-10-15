@@ -21,8 +21,10 @@ class kerberos::server::kadmind_kprop (
   # general common server config for KDCs.
   include kerberos::server::base
 
-  package { 'krb5-kadmind-server-packages':
-    ensure => present,
-    name   => $kadmin_server_packages,
+  if (!defined(Package[$kadmin_server_packages])) {
+    package { 'krb5-kadmind-server-packages':
+      ensure => present,
+      name   => $kadmin_server_packages,
+    }
   }
 }

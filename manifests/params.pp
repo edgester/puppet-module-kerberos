@@ -37,6 +37,29 @@ class kerberos::params {
       $kdc_logfile            = '/var/log/kdc.log'
       $kadmind_logfile        = '/var/log/kerberos_admin_server.log'
     }
+    RedHat: {
+      $client_packages    = [ 'krb5-workstation' ]
+      $kdc_server_packages    = [ 'krb5-server' ]
+      $kadmin_server_packages = [ 'krb5-server' ]
+      $pkinit_packages        = [ 'krb5-pkinit-openssl' ]
+
+      $kdc_service_name       = 'krb5kdc'
+      $kadmin_service_name    = 'kadmin'
+      $kpropd_service_name    = 'kprop'
+
+      $krb5_conf_path         = '/etc/krb5.conf'
+      $kdc_conf_path          = '/var/kerberos/krb5kdc/kdc.conf'
+      $kadm5_acl_path         = '/var/kerberos/krb5kdc/kadm5.acl'
+      $kpropd_acl_path        = '/var/kerberos/krb5kdc/kpropd.acl'
+      $kprop_cron_path        = '/var/kerberos/krb5kdc/kprop.cron'
+      $kprop_path             = '/usr/sbin/kprop'
+      $kdb5_util_path         = '/usr/sbin/kdb5_util'
+
+      $kdc_database_path      = '/var/kerberos/krb5kdc/principal'
+      $kdc_stash_path         = '/var/kerberos/krb5kdc/stash'
+      $kdc_logfile            = '/var/log/krb5kdc.log'
+      $kadmind_logfile        = '/var/log/kadmind.log'
+    }
     default: {
       fail("The ${module_name} module is not supported on ${::osfamily} based systems")
     }
