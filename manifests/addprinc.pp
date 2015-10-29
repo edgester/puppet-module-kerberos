@@ -16,6 +16,8 @@ define kerberos::addprinc($principal_name = $title,
   $password = undef, $flags = '',
   $local = true, $kadmin_ccache = undef, $keytab = undef,
   $tries = undef, $try_sleep = undef,
+  $kadmin_server_package = $kerberos::kadmin_server_package,
+  $client_packages = $kerberos::client_packages,
 ) {
   if $local {
     # if we're gonna run kadmin.local we better make sure it's
@@ -24,7 +26,7 @@ define kerberos::addprinc($principal_name = $title,
     $kadmin = 'kadmin.local'
 
     $addprinc_exec_require = [
-                              Package['krb5-kadmind-server-packages'],
+                              Package[$kadmin_server_package],
                               Exec['create_krb5kdc_principal']
                               ]
   } else {
@@ -44,7 +46,7 @@ define kerberos::addprinc($principal_name = $title,
     }
 
     $addprinc_exec_require = [
-                              Package['krb5-client-packages'],
+                              Package[$client_packages],
                               File['krb5.conf']
                               ]
   }

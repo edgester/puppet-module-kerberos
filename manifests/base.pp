@@ -14,9 +14,9 @@ class kerberos::base (
   $pkinit_packages = $kerberos::pkinit_packages,
 ) inherits kerberos {
   if $pkinit_anchors {
-    package { 'krb5-pkinit-packages':
+    package { $pkinit_packages:
       ensure => present,
-      name   => $pkinit_packages,
+      tag    => 'krb5-pkinit-packages',
     }
   }
 }

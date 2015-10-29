@@ -142,9 +142,8 @@
 #
 # $pkinit_packages
 # $client_packages
-# $kdc_server_packages
-# $kadmin_server_packages
-# $kpropd_server_packages
+# $kdc_server_package
+# $kadmin_server_package
 #   Package names.
 #
 # $kdc_service_name
@@ -239,9 +238,8 @@ class kerberos(
   # packages
   $pkinit_packages = $kerberos::params::pkinit_packages,
   $client_packages = $kerberos::params::client_packages,
-  $kdc_server_packages = $kerberos::params::kdc_server_packages,
-  $kadmin_server_packages = $kerberos::params::kadmin_server_packages,
-  $kpropd_server_packages = $kerberos::params::kpropd_server_packages,
+  $kdc_server_package = $kerberos::params::kdc_server_package,
+  $kadmin_server_package = $kerberos::params::kadmin_server_package,
 
   # service names
   $kdc_service_name = $kerberos::params::kdc_service_name,
