@@ -10,8 +10,10 @@ script:
   - "bundle exec rake lint"
   - "bundle exec rake spec"
 env:
+  - PUPPET_VERSION=4.2.2
   - PUPPET_VERSION=3.7.4
   - PUPPET_VERSION=2.7.17
+
 notifications:
   email:
     on_failure: always
