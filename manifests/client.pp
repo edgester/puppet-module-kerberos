@@ -38,9 +38,8 @@ class kerberos::client (
     $domain_realm_list = $domain_realm
   }
 
-  package { 'krb5-client-packages' :
+  package { $client_packages:
     ensure => present,
-    name   => $client_packages,
     before => File['krb5.conf'],
   }
 

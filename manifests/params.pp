@@ -13,8 +13,8 @@
 # Copyright 2013 Jason Edgecombe, unless otherwise noted.
 #
 class kerberos::params {
-  case $::operatingsystem {
-    Ubuntu, Debian: {
+  case $::osfamily {
+    'Debian': {
       $client_packages    = [ 'krb5-user' ]
       $kdc_server_packages    = [ 'krb5-kdc' ]
       $kadmin_server_packages = [ 'krb5-admin-server' ]
@@ -37,7 +37,7 @@ class kerberos::params {
       $kdc_logfile            = '/var/log/kdc.log'
       $kadmind_logfile        = '/var/log/kerberos_admin_server.log'
     }
-    RedHat: {
+    'RedHat': {
       $client_packages    = [ 'krb5-workstation' ]
       $kdc_server_packages    = [ 'krb5-server' ]
       $kadmin_server_packages = [ 'krb5-server' ]

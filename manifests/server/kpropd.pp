@@ -13,6 +13,8 @@
 # Copyright 2013 Jason Edgecombe, unless otherwise noted.
 #
 class kerberos::server::kpropd (
+  $kdc_database_path = $kerberos::kdc_database_path,
+
   $kpropd_acl_path = $kerberos::kpropd_acl_path,
   $kpropd_master_principal = $kerberos::kpropd_master_principal_cfg,
   $kpropd_service_name = $kerberos::kpropd_service_name,
@@ -55,6 +57,9 @@ class kerberos::server::kpropd (
     group   => 0,
   }
 
+  require stdlib
+  $kdc_database_dir = dirname($kdc_database_path)
+
   service { 'kpropd':
     ensure     => running,
     name       => $kpropd_service_name,
@@ -63,6 +68,6 @@ class kerberos::server::kpropd (
     hasstatus  => true,
     subscribe  => File['kdc.conf', 'kpropd.acl', $kpropd_keytab],
     # kpropd needs its keytab to work
-    require    => Kerberos::Ktadd[$ktadd]
+    require    => [ Kerberos::Ktadd[$ktadd], File[$kdc_database_dir] ]
   }
 }

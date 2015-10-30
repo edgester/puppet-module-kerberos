@@ -16,11 +16,13 @@ define kerberos::ktadd(
   $local = true, $reexport = false,
   $kadmin_ccache = undef, $kadmin_keytab = undef,
   $kadmin_tries = undef, $kadmin_try_sleep = undef,
+  $kadmin_server_package = $kerberos::kadmin_server_package,
+  $client_packages = $kerberos::client_packages,
 ) {
   $ktadd = "ktadd_${keytab}_${principal}"
   if $local {
     $kadmin = 'kadmin.local'
-    Package['krb5-kadmind-server-packages'] -> Exec[$ktadd]
+    Package[$kadmin_server_package] -> Exec[$ktadd]
     Exec['create_krb5kdc_principal'] -> Exec[$ktadd]
   } else {
     $kadmin = 'kadmin'
@@ -35,7 +37,7 @@ define kerberos::ktadd(
       default => "-k '${kadmin_keytab}'"
     }
 
-    Package['krb5-client-packages'] -> Exec[$ktadd]
+    Package[$client_packages] -> Exec[$ktadd]
     File['krb5.conf'] -> Exec[$ktadd]
   }
 

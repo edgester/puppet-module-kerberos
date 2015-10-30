@@ -18,7 +18,7 @@
 #
 class kerberos::server::kdc (
   $kdc_database_path = $kerberos::kdc_database_path,
-  $kdc_server_packages = $kerberos::kdc_server_packages,
+  $kdc_server_package = $kerberos::kdc_server_package,
   $kdc_service_name = $kerberos::kdc_service_name,
 ) inherits kerberos {
   # pkinit packages
@@ -26,10 +26,9 @@ class kerberos::server::kdc (
   # kdc.conf
   include kerberos::server::base
 
-  if (!defined(Package[$kdc_server_packages])) {
-    package { 'krb5-kdc-server-packages' :
+  if (!defined(Package[$kdc_server_package])) {
+    package { $kdc_server_package:
       ensure => present,
-      name   => $kdc_server_packages,
       before => File['kdc.conf'],
     }
   }
@@ -40,11 +39,7 @@ class kerberos::server::kdc (
   if !defined(File[$kdc_database_dir]) {
     # title used by master.pp to require dir before creating
     # database
-    file { 'krb5-kdc-database-dir':
-      ensure => 'directory',
-      path   => $kdc_database_dir,
-      mode   => '0700',
-    }
+    file { $kdc_database_dir: ensure => 'directory' }
   }
 
   service { 'krb5kdc':
@@ -62,5 +57,5 @@ class kerberos::server::kdc (
   Kerberos::Addprinc<| local == true |> -> Service['krb5kdc']
 
   # installed in kerberos::base if enabled
-  Package<| title == 'krb5-pkinit-packages' |> -> Service['krb5kdc']
+  Package<| tag == 'krb5-pkinit-packages' |> -> Service['krb5kdc']
 }
