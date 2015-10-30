@@ -15,6 +15,8 @@ define kerberos::ticket_cache ($ccname = $title,
     $pkinit_cert = "/var/lib/puppet/ssl/certs/${::fqdn}.pem",
     $pkinit_key = "/var/lib/puppet/ssl/private_keys/${::fqdn}.pem",
 
+    $client_packages = $kerberos::client_packages,
+
     # facter fact
     $kerberos_bootstrap = $::kerberos_bootstrap,
 ) {
@@ -45,7 +47,7 @@ define kerberos::ticket_cache ($ccname = $title,
   exec { "ticket_cache_${title}":
     command   => "${kinit_cmd} ${principal}",
     path      => '/usr/bin',
-    require   => [ Package['krb5-client-packages'], File['krb5.conf'] ],
+    require   => [ Package[$client_packages], File['krb5.conf'] ],
     # always recreate (for now) to avoid expired tickets
     # creates => $ccname
     # if we're bootstrapping no KDC might be up yet and even if not

@@ -15,9 +15,9 @@
 class kerberos::params {
   case $::operatingsystem {
     Ubuntu, Debian: {
-      $client_packages    = [ 'krb5-user' ]
-      $kdc_server_packages    = [ 'krb5-kdc' ]
-      $kadmin_server_packages = [ 'krb5-admin-server' ]
+      $client_packages        = [ 'krb5-user' ]
+      $kdc_server_package     = 'krb5-kdc'
+      $kadmin_server_package  = 'krb5-admin-server'
       $pkinit_packages        = [ 'krb5-pkinit' ]
 
       $kdc_service_name       = 'krb5-kdc'
@@ -38,9 +38,9 @@ class kerberos::params {
       $kadmind_logfile        = '/var/log/kerberos_admin_server.log'
     }
     RedHat: {
-      $client_packages    = [ 'krb5-workstation' ]
-      $kdc_server_packages    = [ 'krb5-server' ]
-      $kadmin_server_packages = [ 'krb5-server' ]
+      $client_packages        = [ 'krb5-workstation' ]
+      $kdc_server_package     = 'krb5-server'
+      $kadmin_server_package  = 'krb5-server'
       $pkinit_packages        = [ 'krb5-pkinit-openssl' ]
 
       $kdc_service_name       = 'krb5kdc'

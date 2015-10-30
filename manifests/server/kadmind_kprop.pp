@@ -15,16 +15,15 @@
 # Copyright 2013 Jason Edgecombe, unless otherwise noted.
 #
 class kerberos::server::kadmind_kprop (
-  $kadmin_server_packages = $kerberos::kadmin_server_packages,
+  $kadmin_server_package = $kerberos::kadmin_server_package,
 ) inherits kerberos {
   # kadmind and kprop both only make sense on a master KDC. So pull in
   # general common server config for KDCs.
   include kerberos::server::base
 
-  if (!defined(Package[$kadmin_server_packages])) {
-    package { 'krb5-kadmind-server-packages':
+  if (!defined(Package[$kadmin_server_package])) {
+    package { $kadmin_server_package:
       ensure => present,
-      name   => $kadmin_server_packages,
     }
   }
 }
