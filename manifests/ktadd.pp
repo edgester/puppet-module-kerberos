@@ -18,6 +18,7 @@ define kerberos::ktadd(
   $kadmin_tries = undef, $kadmin_try_sleep = undef,
   $kadmin_server_package = $kerberos::kadmin_server_package,
   $client_packages = $kerberos::client_packages,
+  $realm = $kerberos::realm,
 ) {
   $ktadd = "ktadd_${keytab}_${principal}"
   if $local {
@@ -44,7 +45,7 @@ define kerberos::ktadd(
   if $reexport {
     $unless = undef
   } else {
-    $unless = "klist -k '${keytab}' | grep ' ${principal}@'"
+    $unless = "klist -k '${keytab}' | grep ' ${principal}@${realm}'"
   }
 
   $cmd = "ktadd -k ${keytab} ${principal}"
