@@ -26,21 +26,12 @@ class kerberos::server::kdc (
   # kdc.conf
   include kerberos::server::base
 
-  if (!defined(Package[$kdc_server_package])) {
-    package { $kdc_server_package:
-      ensure => present,
-      before => File['kdc.conf'],
-    }
-  }
+  ensure_resource('package', $kdc_server_package, { ensure => present, before => File['kdc.conf']})
 
   # is created here for both master and slave
   require stdlib
   $kdc_database_dir = dirname($kdc_database_path)
-  if !defined(File[$kdc_database_dir]) {
-    # title used by master.pp to require dir before creating
-    # database
-    file { $kdc_database_dir: ensure => 'directory' }
-  }
+  ensure_resource('file', $kdc_database_dir, { ensure => 'directory' })
 
   service { 'krb5kdc':
     ensure     => running,

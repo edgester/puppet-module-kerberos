@@ -47,9 +47,7 @@ class kerberos::server::kprop (
   $kdc_database_dir = dirname($kdc_database_path)
 
   $kprop_cron_dir = dirname($kprop_cron_path)
-  if !defined(File[$kprop_cron_dir]) {
-    file { $kprop_cron_dir: ensure => directory }
-  }
+  ensure_resource('file', $kprop_cron_dir, { ensure => 'directory' })
 
   file { 'kprop.cron':
     ensure  => file,

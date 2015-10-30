@@ -31,9 +31,7 @@ class kerberos::server::base (
 ) inherits kerberos {
   require stdlib
   $kdc_conf_dir = dirname($kdc_conf_path)
-  if !defined(File[$kdc_conf_dir]) {
-    file { $kdc_conf_dir: ensure => 'directory' }
-  }
+  ensure_resource('file', $kdc_conf_dir, { ensure => 'directory' })
 
   file { 'kdc.conf':
     ensure  => file,
