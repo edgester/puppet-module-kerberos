@@ -3,12 +3,16 @@ matrix:
   include:
     - rvm: 1.8.7
       env: PUPPET_VERSION=2.7.17
+      gemfile: Gemfile
     - rvm: 1.8.7
       env: PUPPET_VERSION=3.7.4
+      gemfile: Gemfile
     - rvm: 2.2.0
       env: PUPPET_VERSION=3.7.4
+      gemfile: Gemfile
     - rvm: 2.2.0
       env: PUPPET_VERSION=4.2.2
+      gemfile: Gemfile
   allow_failures:
     - rvm: 2.2.0
       env: PUPPET_VERSION=3.7.4
@@ -19,5 +23,4 @@ script:
 notifications:
   email:
     on_failure: always
-gemfile: Gemfile
 sudo: false
