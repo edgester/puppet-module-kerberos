@@ -22,9 +22,7 @@ class kerberos::server::kadmind (
 
   require stdlib
   $kadm5_acl_dir = dirname($kadm5_acl_path)
-  if !defined(File[$kadm5_acl_dir]) {
-    file { $kadm5_acl_dir: ensure => 'directory' }
-  }
+  ensure_resource( 'file', $kadm5_acl_dir, { ensure => 'directory' })
 
   file { 'kadm5.acl':
     ensure  => file,

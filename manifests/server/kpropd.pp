@@ -37,6 +37,10 @@ class kerberos::server::kpropd (
 
   # if we have pkinit we can automatically create the keytab
   $ktadd = "${kpropd_keytab}@${kpropd_principal}"
+
+  notify { "ktadd = ${kpropd_keytab}@${kpropd_principal}" : }
+  notify { "pkinit_anchors = ${pkinit_anchors}" : }
+
   if $pkinit_anchors and !defined(Kerberos::Addprinc_keytab_ktadd[$ktadd]) {
     kerberos::addprinc_keytab_ktadd { $ktadd:
       local            => false,
