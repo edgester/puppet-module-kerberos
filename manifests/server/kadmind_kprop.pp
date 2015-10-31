@@ -21,9 +21,5 @@ class kerberos::server::kadmind_kprop (
   # general common server config for KDCs.
   include kerberos::server::base
 
-  if (!defined(Package[$kadmin_server_package])) {
-    package { $kadmin_server_package:
-      ensure => present,
-    }
-  }
+  ensure_resource('package', $kadmin_server_package, { ensure => present })
 }
