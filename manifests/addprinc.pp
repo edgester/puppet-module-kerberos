@@ -51,7 +51,7 @@ define kerberos::addprinc($principal_name = $title,
                               ]
   }
 
-  if !("-randkey" in $flags) {
+  if !('-randkey' in $flags) {
     $password_par = $password ? {
       undef => '-nokey',
       default => "-pw ${password}"
