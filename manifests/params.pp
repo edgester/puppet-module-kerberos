@@ -39,8 +39,8 @@ class kerberos::params {
     }
     'RedHat': {
       $client_packages        = [ 'krb5-workstation' ]
-      $kdc_server_package     = [ 'krb5-server' ]
-      $kadmin_server_package  = [ 'krb5-server' ]
+      $kdc_server_package     = 'krb5-server'
+      $kadmin_server_package  = 'krb5-server'
       $pkinit_packages        = [ 'krb5-pkinit-openssl' ]
 
       $kdc_service_name       = 'krb5kdc'
