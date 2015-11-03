@@ -63,7 +63,7 @@ in a more secure location.
 ###kdc1.realmone.com.yaml:
 ```
   ---
-  kerberos_principals:
+  kerberos::principals:
     user1:
       password: secretsecret
 ```
@@ -72,7 +72,7 @@ in a more secure location.
 ###kdc2.realmtwo.com.yaml:
 ```
   ---
-  kerberos_principals:
+  kerberos::principals:
     user2:
       password: p4ssw0rd!
 ```
