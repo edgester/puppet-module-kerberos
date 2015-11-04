@@ -18,6 +18,7 @@ define kerberos::ktadd(
   $kadmin_tries = undef, $kadmin_try_sleep = undef,
   $kadmin_server_package = $kerberos::kadmin_server_package,
   $client_packages = $kerberos::client_packages,
+  $krb5_conf_path = $kerberos::krb5_conf_path,
   $realm = $kerberos::realm,
 ) {
   $ktadd = "ktadd_${keytab}_${principal}"
@@ -50,11 +51,12 @@ define kerberos::ktadd(
 
   $cmd = "ktadd -k ${keytab} ${principal}"
   exec { "ktadd_${keytab}_${principal}":
-    command   => "${kadmin} ${ccache_par} ${keytab_par} -q '${cmd}'",
-    unless    => $unless,
-    path      => [ '/bin', '/usr/bin', '/usr/bin', '/usr/sbin' ],
-    require   => File[$keytab],
-    tries     => $kadmin_tries,
-    try_sleep => $kadmin_try_sleep,
+    command     => "${kadmin} ${ccache_par} ${keytab_par} -q '${cmd}'",
+    unless      => $unless,
+    path        => [ '/bin', '/usr/bin', '/usr/bin', '/usr/sbin' ],
+    environment => "KRB5_CONFIG=${krb5_conf_path}",
+    require     => File[$keytab],
+    tries       => $kadmin_tries,
+    try_sleep   => $kadmin_try_sleep,
   }
 }

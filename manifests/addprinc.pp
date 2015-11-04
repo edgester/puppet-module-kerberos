@@ -18,6 +18,7 @@ define kerberos::addprinc($principal_name = $title,
   $tries = undef, $try_sleep = undef,
   $kadmin_server_package = $kerberos::kadmin_server_package,
   $client_packages = $kerberos::client_packages,
+  $krb5_conf_path = $kerberos::krb5_conf_path,
 ) {
   if $local {
     # if we're gonna run kadmin.local we better make sure it's
@@ -60,10 +61,11 @@ define kerberos::addprinc($principal_name = $title,
 
   $cmd = "addprinc ${flags} ${password_par} ${principal_name}"
   exec { "add_principal_${principal_name}":
-    command   => "${kadmin} ${ccache_par} ${keytab_par} -q '${cmd}'",
-    path      => [ '/usr/sbin', '/usr/bin' ],
-    require   => $addprinc_exec_require,
-    tries     => $kerberos::kadmin_tries,
-    try_sleep => $kerberos::kadmin_try_sleep,
+    command     => "${kadmin} ${ccache_par} ${keytab_par} -q '${cmd}'",
+    path        => [ '/usr/sbin', '/usr/bin' ],
+    environment => "KRB5_CONFIG=${krb5_conf_path}",
+    require     => $addprinc_exec_require,
+    tries       => $kerberos::kadmin_tries,
+    try_sleep   => $kerberos::kadmin_try_sleep,
   }
 }
