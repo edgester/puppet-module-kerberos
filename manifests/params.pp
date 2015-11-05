@@ -36,6 +36,9 @@ class kerberos::params {
       $kdc_stash_path         = '/etc/krb5kdc/stash'
       $kdc_logfile            = '/var/log/kdc.log'
       $kadmind_logfile        = '/var/log/kerberos_admin_server.log'
+
+      $pkinit_cert            = "/var/lib/puppet/ssl/certs/${::fqdn}.pem"
+      $pkinit_key             = "/var/lib/puppet/ssl/private_keys/${::fqdn}.pem"
     }
     'RedHat': {
       $client_packages        = [ 'krb5-workstation' ]
@@ -59,6 +62,9 @@ class kerberos::params {
       $kdc_stash_path         = '/var/kerberos/krb5kdc/stash'
       $kdc_logfile            = '/var/log/krb5kdc.log'
       $kadmind_logfile        = '/var/log/kadmind.log'
+
+      $pkinit_cert            = "/var/lib/puppet/ssl/certs/${::fqdn}.pem"
+      $pkinit_key             = "/var/lib/puppet/ssl/private_keys/${::fqdn}.pem"
     }
     default: {
       fail("The ${module_name} module is not supported on ${::osfamily} based systems")
