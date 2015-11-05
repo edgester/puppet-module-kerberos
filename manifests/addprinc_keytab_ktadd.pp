@@ -19,8 +19,10 @@ define kerberos::addprinc_keytab_ktadd(
 ) {
   if $local == false {
     include kerberos::host_ticket_cache
-    Kerberos::Ticket_cache['krb5-cache-puppet'] ->
-      Kerberos::Addprinc[$principal]
+    if !defined(Kerberos::Addprinc[$principal]) {
+      Kerberos::Ticket_cache['krb5-cache-puppet'] ->
+        Kerberos::Addprinc[$principal]
+    }
   }
 
   # this is why we can only do one principal at a time - if we ever find a way
@@ -56,6 +58,10 @@ define kerberos::addprinc_keytab_ktadd(
       kadmin_try_sleep => $kadmin_try_sleep,
     }
   }
+
+  Kerberos::Ticket_cache['krb5-cache-puppet'] ->
+    Kerberos::Keytab[$keytab] ->
+    Kerberos::Ktadd[$ktadd]
 
   Kerberos::Addprinc[$principal] ->
     Kerberos::Keytab[$keytab] ->
