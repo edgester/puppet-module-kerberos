@@ -233,6 +233,9 @@ class kerberos(
   $host_ticket_cache_service = 'kadmin/admin',
   $host_ticket_cache_principal = $fqdn,
 
+  $pkinit_cert = $kerberos::params::pkinit_cert,
+  $pkinit_key  = $kerberos::params::pkinit_key,
+
   $kdc_slaves = undef,
 
   # packages
