@@ -9,7 +9,7 @@
 #
 
 define kerberos::keytab($keytab = $title,
-  $mode = '0400', $owner = 0, $group = 0,
+  $mode = '0600', $owner = 0, $group = 0,
   $replace = false,
 ) {
   # TODO: Avoid recreation if already existing but do update if keys get to

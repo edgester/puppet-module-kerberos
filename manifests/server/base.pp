@@ -33,6 +33,12 @@ class kerberos::server::base (
   $kdc_conf_dir = dirname($kdc_conf_path)
   ensure_resource('file', $kdc_conf_dir, { ensure => 'directory' })
 
+  if is_integer($kdc_max_life) {
+    $max_life_str = "${kdc_max_life}s"
+  } else {
+    $max_life_str = $kdc_max_life
+  }
+
   file { 'kdc.conf':
     ensure  => file,
     path    => $kdc_conf_path,

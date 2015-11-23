@@ -15,7 +15,11 @@ define kerberos::addprinc_keytab_ktadd(
   $kadmin_tries = undef, $kadmin_try_sleep = undef,
   # only here for host_keytab - define keytab directly if specific permissions
   # are desired
-  $keytab_owner = 0, $keytab_group = 0, $keytab_mode = '0400'
+  $keytab_owner = 0, $keytab_group = 0, $keytab_mode = '0600',
+  $ktadd_max_key_age = $kerberos::ktadd_max_key_age,
+  $ktadd_client_only = $kerberos::ktadd_client_only,
+  $ktadd_cronjob_hour = $kerberos::ktadd_cronjob_hour,
+  $ktadd_cronjob_minute = $kerberos::ktadd_cronjob_minute,
 ) {
   if $local == false {
     include kerberos::host_ticket_cache
@@ -56,6 +60,11 @@ define kerberos::addprinc_keytab_ktadd(
       kadmin_keytab    => $kadmin_keytab,
       kadmin_tries     => $kadmin_tries,
       kadmin_try_sleep => $kadmin_try_sleep,
+      keytab_owner     => $keytab_owner,
+      max_key_age      => $ktadd_max_key_age,
+      client_only      => $ktadd_client_only,
+      cronjob_hour     => $ktadd_cronjob_hour,
+      cronjob_minute   => $ktadd_cronjob_minute,
     }
   }
 
