@@ -17,6 +17,7 @@ class kerberos::server::kadmind (
   $kadm5_acl_path = $kerberos::kadm5_acl_path,
   $kadmind_acls = $kerberos::kadmind_acls,
   $kadmin_service_name = $kerberos::kadmin_service_name,
+  $kadmin_server_package = $kerberos::kadmin_server_package,
 ) inherits kerberos {
   include kerberos::server::kadmind_kprop
 
@@ -40,7 +41,7 @@ class kerberos::server::kadmind (
     enable     => true,
     hasrestart => true,
     hasstatus  => true,
-    require    => Exec['create_krb5kdc_principal'],
+    require    => Package[$kadmin_server_package],
     subscribe  => [ File['kdc.conf', 'kadm5.acl'],
                     Exec['create_krb5kdc_principal'] ],
   }
