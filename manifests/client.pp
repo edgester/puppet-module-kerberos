@@ -44,7 +44,7 @@ class kerberos::client (
   }
 
   $krb5_conf_dir = dirname($krb5_conf_path)
-  ensure_resource('file', $krb5_conf_dir, { ensure => 'directory' })
+  ensure_resource('file', $krb5_conf_dir, { ensure => 'directory', replace => false })
 
   file { 'krb5.conf':
     ensure  => file,
