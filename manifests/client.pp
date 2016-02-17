@@ -12,16 +12,16 @@
 # Copyright 2013 Jason Edgecombe, unless otherwise noted.
 #
 class kerberos::client (
-  $krb5_conf_path = $kerberos::krb5_conf_path,
-  $realm = $kerberos::realm,
-  $domain_realm = $kerberos::domain_realm,
-  $kdcs = $kerberos::kdcs,
-  $master_kdc = $kerberos::master_kdc,
-  $admin_server = $kerberos::admin_server,
+  $krb5_conf_path    = $kerberos::krb5_conf_path,
+  $realm             = $kerberos::realm,
+  $domain_realm      = $kerberos::domain_realm,
+  $kdcs              = $kerberos::kdcs,
+  $master_kdc        = $kerberos::master_kdc,
+  $admin_server      = $kerberos::admin_server,
   $allow_weak_crypto = $kerberos::allow_weak_crypto,
-  $forwardable = $kerberos::forwardable,
-  $proxiable = $kerberos::proxiable,
-  $pkinit_anchors = $kerberos::pkinit_anchors_cfg,
+  $forwardable       = $kerberos::forwardable,
+  $proxiable         = $kerberos::proxiable,
+  $pkinit_anchors    = $kerberos::pkinit_anchors_cfg,
 
   $client_packages = $kerberos::client_packages,
 ) inherits kerberos {
@@ -40,12 +40,8 @@ class kerberos::client (
 
   package { $client_packages:
     ensure => present,
-    before => File['krb5.conf'],
   }
-
-  $krb5_conf_dir = dirname($krb5_conf_path)
-  ensure_resource('file', $krb5_conf_dir, { ensure => 'directory', replace => false })
-
+  ->
   file { 'krb5.conf':
     ensure  => file,
     path    => $krb5_conf_path,
@@ -53,6 +49,5 @@ class kerberos::client (
     mode    => '0644',
     owner   => 0,
     group   => 0,
-    require => File[$krb5_conf_dir],
   }
 }
