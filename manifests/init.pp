@@ -55,6 +55,15 @@
 # $proxiable
 #   Request proxiable tickets by default.
 #
+# $dns_lookup_realm
+#   Indicate whether DNS TXT records should be used to determine the Kerberos realm of a host.
+#   The default is not to use these records. 
+#
+# $dns_lookup_kdc
+#  Indicate whether DNS SRV records should be used to locate the KDCs and other servers 
+#  for a realm, if they are not listed in the krb5.conf information for the realm
+#  The default is to use these records
+#
 # $pkinit_anchors
 #   Path to CA certificate to use for PKINIT.
 #
@@ -192,6 +201,8 @@ class kerberos(
   $allow_weak_crypto = false,
   $forwardable = true,
   $proxiable = true,
+  $dns_lookup_realm = false,
+  $dns_lookup_kdc = true,
   $pkinit_anchors = undef,
 
   $kdc_ports = '88',

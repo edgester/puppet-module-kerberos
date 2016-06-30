@@ -8,6 +8,8 @@
 	ccache_type = 4
 	forwardable = <%= @forwardable %>
 	proxiable = <%= @proxiable %>
+	dns_lookup_realm = <%= @dns_lookup_realm %>
+	dns_lookup_kdc = <%= @dns_lookup_kdc %>
 <% if @pkinit_anchors -%>
 	pkinit_anchors = <%= @pkinit_anchors %>
 <% end -%>

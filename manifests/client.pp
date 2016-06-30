@@ -21,6 +21,8 @@ class kerberos::client (
   $allow_weak_crypto = $kerberos::allow_weak_crypto,
   $forwardable       = $kerberos::forwardable,
   $proxiable         = $kerberos::proxiable,
+  $dns_lookup_realm  = $kerberos::dns_lookup_realm,
+  $dns_lookup_kdc    = $kerberos::dns_lookup_kdc,
   $pkinit_anchors    = $kerberos::pkinit_anchors_cfg,
 
   $client_packages = $kerberos::client_packages,
