@@ -67,6 +67,12 @@
 # $pkinit_anchors
 #   Path to CA certificate to use for PKINIT.
 #
+# $extra_realms
+#   Add additional realms to the [realms] section in the krb5.conf
+#
+# $capaths
+#   Add [capaths] section to krb5.conf
+#
 # kdc.conf
 # $kdc_ports
 #   Ports to have the KDC listen on.
@@ -204,6 +210,8 @@ class kerberos(
   $dns_lookup_realm = false,
   $dns_lookup_kdc = true,
   $pkinit_anchors = undef,
+  $extra_realms = {},
+  $capaths = {},
 
   $kdc_ports = '88',
   $kdc_database_path = $kerberos::params::kdc_database_path,

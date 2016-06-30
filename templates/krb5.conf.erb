@@ -32,8 +32,32 @@
                 admin_server = <%= @admin_server %>
 <% end -%>
         }
+<% if ! @extra_realms.empty? -%>
+<% @extra_realms.each_pair do |realm, relations| -%>
+<% if relations -%>
+  <% relations.each_pair do |key, val| -%>
+      <%= realm %> = {
+                <%= key %> = <%= val %>
+        }
+<% end -%>
+<% else -%>
+        <%= realm %> = {}
+<% end -%>
+<% end -%>
+<% end -%>
 
 [domain_realm]
 <% @domain_realm_list.each_pair do |key, val| -%>
         <%= key %> = <%= val %>
+<% end -%>
+<% if ! @capaths.empty? -%>
+
+[capaths]
+<% @capaths.each_pair do |key, val| -%>
+  <% val.each_pair do |val1, val2| -%>
+      <%= key %> = {
+                <%= val1 %> = <%= val2 %>
+        }
+<% end -%>
+<% end -%>
 <% end -%>

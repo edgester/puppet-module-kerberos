@@ -24,6 +24,8 @@ class kerberos::client (
   $dns_lookup_realm  = $kerberos::dns_lookup_realm,
   $dns_lookup_kdc    = $kerberos::dns_lookup_kdc,
   $pkinit_anchors    = $kerberos::pkinit_anchors_cfg,
+  $extra_realms      = $kerberos::extra_realms,
+  $capaths           = $kerberos::capaths,
 
   $client_packages = $kerberos::client_packages,
 ) inherits kerberos {
