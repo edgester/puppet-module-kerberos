@@ -1,6 +1,6 @@
 {
   "name": "edgester-kerberos",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "author": "edgester",
   "summary": "Manage MIT Kerberos",
   "license": "BSD-2-Clause",
