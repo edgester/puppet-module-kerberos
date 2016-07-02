@@ -10,9 +10,6 @@ matrix:
     - rvm: 2.2.0
       env: PUPPET_VERSION=4.2.2
       gemfile: Gemfile
-  allow_failures:
-    - rvm: 2.2.0
-      env: PUPPET_VERSION=3.7.4
 script:
   - "bundle exec rake validate"
   - "bundle exec rake lint"
