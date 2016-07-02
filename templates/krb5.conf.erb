@@ -1,22 +1,24 @@
 [libdefaults]
-	default_realm = <%= @realm %>
+        default_realm = <%= @realm %>
 
 # The following krb5.conf variables are only for MIT Kerberos.
-	krb4_config = /etc/krb.conf
-	krb4_realms = /etc/krb.realms
-	kdc_timesync = 1
-	ccache_type = 4
-	forwardable = <%= @forwardable %>
-	proxiable = <%= @proxiable %>
+        krb4_config = /etc/krb.conf
+        krb4_realms = /etc/krb.realms
+        kdc_timesync = 1
+        ccache_type = 4
+        forwardable = <%= @forwardable %>
+        proxiable = <%= @proxiable %>
+        dns_lookup_realm = <%= @dns_lookup_realm %>
+        dns_lookup_kdc = <%= @dns_lookup_kdc %>
 <% if @pkinit_anchors -%>
-	pkinit_anchors = <%= @pkinit_anchors %>
+        pkinit_anchors = <%= @pkinit_anchors %>
 <% end -%>
 
         # set to true for OpenAFS to work
         allow_weak_crypto = <%= @allow_weak_crypto %>
 
 # The following libdefaults parameters are only for Heimdal Kerberos.
-	fcc-mit-ticketflags = true
+        fcc-mit-ticketflags = true
 
 [realms]
         <%= @realm %> = {
@@ -30,8 +32,36 @@
                 admin_server = <%= @admin_server %>
 <% end -%>
         }
+<% if ! @extra_realms.empty? -%>
+<% @extra_realms.each_pair do |realm, relations| -%>
+<% if relations -%>
+        <%= realm %> = {
+<% relations.each do |relation| -%>
+<% relation.each_pair do |key, val| -%>
+                <%= key %> = <%= val %>
+<% end -%>
+<% end -%>
+        }
+<% else -%>
+        <%= realm %> = {}
+<% end -%>
+<% end -%>
+<% end -%>
 
 [domain_realm]
 <% @domain_realm_list.each_pair do |key, val| -%>
         <%= key %> = <%= val %>
+<% end -%>
+<% if ! @capaths.empty? -%>
+
+[capaths]
+<% @capaths.each_pair do |client_realm, subtags| -%>
+        <%= client_realm %> = {
+<% subtags.each do |subtag| -%>
+<% subtag.each_pair do |server_realm, intermediate_realm| -%>
+                <%= server_realm %> = <%= intermediate_realm %>
+<% end -%>
+<% end -%>
+        }
+<% end -%>
 <% end -%>

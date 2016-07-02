@@ -89,3 +89,30 @@ in a more secure location.
       - REALMTWO.COM
     password: differentverylongsecurerandomlyproducedpassword
 ```
+
+You can also define a additional [capaths] section or
+additional realms to your [realms] section with Hiera
+
+###capaths.yaml:
+```
+  ---
+  kerberos::capaths:
+    'EXAMPLE.COM':
+      - 'OTHER-REALM.COM': '.'
+    'US.EXAMPLE.COM':
+      - 'OTHER-REALM.COM': 'EXAMPLE.COM'
+```
+
+
+###extra_realms.yaml:
+```
+  ---
+  kerberos::extra_realms:
+    'EXAMPLE.COM':
+      - 'kdc': 'kdc1.example.com'
+      - 'kdc': 'kdc2.example.com'
+      - 'kdc': 'kdc3.example.com'
+    'OTHER-REALM.COM':
+      - 'kdc': 'kdc1.other-realm.com'
+      - 'kdc': 'kdc2.other-realm.com'
+```
