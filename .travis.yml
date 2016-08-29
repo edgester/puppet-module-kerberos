@@ -8,7 +8,7 @@ matrix:
       env: PUPPET_VERSION=3.7.5
       gemfile: Gemfile
     - rvm: 2.2.0
-      env: PUPPET_VERSION=4.2.3
+      env: PUPPET_VERSION=4.2.3 STRICT_VARIABLES="no"
       gemfile: Gemfile
 script:
   - "bundle exec rake validate"
