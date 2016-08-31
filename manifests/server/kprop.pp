@@ -15,7 +15,7 @@
 #
 class kerberos::server::kprop (
   $kprop_cron_path = $kerberos::kprop_cron_path,
-  $kprop_cron_hour = $kprop_cron_hour,
+  $kprop_cron_hour = $kerberos::kprop_cron_hour,
   $kprop_cron_minute = $kerberos::kprop_cron_minute,
   $kprop_keytab = $kerberos::kprop_keytab,
   $kprop_principal = $kerberos::kprop_principal,
