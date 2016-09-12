@@ -19,5 +19,5 @@ task :validate do
   end
 end
 
-desc 'This runs the tasks for commit: validate, lint, spec'
-task :check => ["validate", "lint", "spec"]
+desc 'This runs the tasks for commit: validate, lint, spec, beaker'
+task :check => ["validate", "lint", "spec", "beaker"]

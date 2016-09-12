@@ -1,20 +1,22 @@
+---
 language: ruby
+cache: bundler
+
 matrix:
   include:
     - rvm: 1.9.3
-      env: PUPPET_VERSION=2.7.26
-      gemfile: Gemfile
+      env: PUPPET_VERSION='2.7.26'
+      services: docker
+      script: bundle exec rake check
     - rvm: 1.9.3
-      env: PUPPET_VERSION=3.7.5
-      gemfile: Gemfile
-    - rvm: 2.2.0
-      env: PUPPET_VERSION=4.2.3 STRICT_VARIABLES="no"
-      gemfile: Gemfile
-script:
-  - "bundle exec rake validate"
-  - "bundle exec rake lint"
-  - "bundle exec rake spec"
+      env: PUPPET_VERSION='3.7.5'
+      services: docker
+      script: bundle exec rake check
+    - rvm: 2.2
+      env: PUPPET_VERSION='4.5'
+      services: docker
+      script: bundle exec rake check
+
 notifications:
   email:
     on_failure: always
-sudo: false

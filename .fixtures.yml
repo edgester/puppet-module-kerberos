@@ -1,6 +1,9 @@
 fixtures:
     repositories:
-        stdlib: "https://github.com/puppetlabs/puppetlabs-stdlib.git"
+        stdlib:
+          repo: "https://github.com/puppetlabs/puppetlabs-stdlib.git"
+          ref: "4.12.0"
+
     symlinks:
         kerberos: "#{source_dir}"
 
