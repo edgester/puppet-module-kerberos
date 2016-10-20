@@ -243,7 +243,7 @@ class kerberos(
 
   # settings to be implemented via logic
   $kdc_principals = {},
-  $kdc_trusted_realms = {},
+  $kdc_trusted_realms = undef,
 
   $kadmind_enable = true,
   $kadmind_acls = { "*/admin@${realm}" => '*' },
