@@ -28,8 +28,7 @@ class kerberos::server::kprop (
   $pkinit_anchors = $kerberos::pkinit_anchors,
   $host_ticket_cache_ccname = $kerberos::host_ticket_cache_ccname,
 
-  # facter fact
-  $kerberos_bootstrap = $::kerberos_bootstrap,
+  $kerberos_bootstrap = $kerberos::kerberos_bootstrap,
 ) inherits kerberos {
   include kerberos::server::kadmind_kprop
 

@@ -18,8 +18,7 @@ define kerberos::ticket_cache ($ccname = $title,
   $client_packages = $kerberos::client_packages,
   $krb5_conf_path = $kerberos::krb5_conf_path,
 
-  # facter fact
-  $kerberos_bootstrap = $::kerberos_bootstrap,
+  $kerberos_bootstrap = $kerberos::kerberos_bootstrap,
 ) {
   # this needs to be a client in order to run kinit and kadmin
   include kerberos::client
