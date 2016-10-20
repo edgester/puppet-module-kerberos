@@ -30,6 +30,16 @@ define kerberos::addprinc($principal_name = $title,
                               Package[$kadmin_server_package],
                               Exec['create_krb5kdc_principal']
                               ]
+    $ccache_par = $kadmin_ccache ? {
+      undef => '',
+      default => "-c '${kadmin_ccache}'"
+    }
+
+    $keytab_par = $keytab ? {
+      undef => '',
+      default => "-k -t '${keytab}'"
+    }
+
   } else {
     # if we're gonna run kadmin we better make sure it's installed
     # and configured
@@ -54,6 +64,7 @@ define kerberos::addprinc($principal_name = $title,
 
   if !('-randkey' in $flags) {
     $password_par = $password ? {
+
       undef => '-nokey',
       default => "-pw ${password}"
     }
@@ -65,7 +76,7 @@ define kerberos::addprinc($principal_name = $title,
     path        => [ '/usr/sbin', '/usr/bin' ],
     environment => "KRB5_CONFIG=${krb5_conf_path}",
     require     => $addprinc_exec_require,
-    tries       => $kerberos::kadmin_tries,
-    try_sleep   => $kerberos::kadmin_try_sleep,
+    tries       => $tries,
+    try_sleep   => $try_sleep,
   }
 }
