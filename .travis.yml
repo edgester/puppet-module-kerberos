@@ -16,6 +16,10 @@ matrix:
       env: PUPPET_VERSION='4.5'
       services: docker
       script: bundle exec rake check
+    - rvm: 2.2
+      env: PUPPET_VERSION='4.6.1'
+      services: docker
+      script: bundle exec rake check
 
 notifications:
   email:
