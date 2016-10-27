@@ -243,7 +243,7 @@ class kerberos(
 
   # settings to be implemented via logic
   $kdc_principals = {},
-  $kdc_trusted_realms = {},
+  $kdc_trusted_realms = undef,
 
   $kadmind_enable = true,
   $kadmind_acls = { "*/admin@${realm}" => '*' },
@@ -267,6 +267,10 @@ class kerberos(
   $kdc_service_name = $kerberos::params::kdc_service_name,
   $kadmin_service_name = $kerberos::params::kadmin_service_name,
   $kpropd_service_name = $kerberos::params::kpropd_service_name,
+
+  # facter fact
+  $kerberos_bootstrap = $kerberos::params::kerberos_bootstrap,
+
 ) inherits kerberos::params {
   $kpropd_master_principal_cfg = $kpropd_master_principal ? {
     default => $kpropd_master_principal,

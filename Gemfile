@@ -8,6 +8,6 @@ gem 'facter', '>= 1.7.0'
 gem 'rspec-core'
 gem 'json_pure', '~> 1.8', '>= 1.8.3'
 # beaker related gems
-gem 'beaker-rspec'
+gem 'beaker-rspec', '5.6.0'
 gem 'serverspec'
 gem 'specinfra'

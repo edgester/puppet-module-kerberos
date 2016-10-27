@@ -39,6 +39,8 @@ class kerberos::params {
 
       $pkinit_cert            = "/var/lib/puppet/ssl/certs/${::fqdn}.pem"
       $pkinit_key             = "/var/lib/puppet/ssl/private_keys/${::fqdn}.pem"
+
+      $kerberos_bootstrap    = false
     }
     'RedHat': {
       $client_packages        = [ 'krb5-workstation' ]
@@ -65,6 +67,8 @@ class kerberos::params {
 
       $pkinit_cert            = "/var/lib/puppet/ssl/certs/${::fqdn}.pem"
       $pkinit_key             = "/var/lib/puppet/ssl/private_keys/${::fqdn}.pem"
+
+      $kerberos_bootstrap    = false
     }
     default: {
       fail("The ${module_name} module is not supported on ${::osfamily} based systems")
