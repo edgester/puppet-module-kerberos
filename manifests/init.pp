@@ -155,6 +155,28 @@
 # $host_ticket_cache_principal
 #   When creating a ticket cache for use by kadmin use these parameters.
 #
+# $ktadd_max_key_age
+#   Default for maximum age of keys in keytab files in days. If greater than
+#   zero, a cron job is installed that regularly checks for timestamps of keys
+#   for principals and runs the equivalent of k5srvutil change & delold.
+#
+# $ktadd_client_only
+#   Whether to preserve only the current set of keys or the last set as well.
+#   The latter is needed for services to continue to function while tickets
+#   using the old keys are still in use.
+#
+# $ktadd_cronjob_hour
+# $ktadd_cronjob_minute
+#   When to run the key age check cron job.
+#
+# $ktadd_key_helper
+#   The command to use when checking and possibly updating keys in keytabs.
+#
+# $ktadd_check_helper
+#   Base name of helper scripts to generate for checking if keys are current.
+#   Defaults to undef, meaning that no scripts will be created. Set to e.g.
+#   /usr/local/bin/kerberos_ktadd_check to enable.
+#
 # $pkinit_packages
 # $client_packages
 # $kdc_server_package
@@ -217,7 +239,7 @@ class kerberos(
   $kdc_database_path = $kerberos::params::kdc_database_path,
   $kdc_database_password = undef,
   $kdc_stash_path = $kerberos::params::kdc_stash_path,
-  $kdc_max_life = '10h 0m 0s',
+  $kdc_max_life = 10 * 60 * 60, # '0d 10h 0m 0s'
   $kdc_max_renewable_life = '7d 0h 0m 0s',
   $kdc_master_key_type = 'aes256-cts',
   $kdc_supported_enctypes = [ 'aes256-cts:normal',
@@ -251,6 +273,13 @@ class kerberos(
   $host_ticket_cache_ccname = '/var/lib/puppet/krb5cc.puppet',
   $host_ticket_cache_service = 'kadmin/admin',
   $host_ticket_cache_principal = $fqdn,
+
+  $ktadd_max_key_age = 60, # days
+  $ktadd_client_only = false,
+  $ktadd_cronjob_hour = '*',
+  $ktadd_cronjob_minute = '2',
+  $ktadd_key_helper = '/usr/local/bin/kerberos_ktadd_key_helper',
+  $ktadd_check_helper = undef,
 
   $pkinit_cert = $kerberos::params::pkinit_cert,
   $pkinit_key  = $kerberos::params::pkinit_key,

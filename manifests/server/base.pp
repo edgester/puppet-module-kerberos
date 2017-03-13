@@ -30,6 +30,12 @@ class kerberos::server::base (
 ) inherits kerberos {
   require stdlib
 
+  if is_integer($kdc_max_life) {
+    $max_life_str = "${kdc_max_life}s"
+  } else {
+    $max_life_str = $kdc_max_life
+  }
+
   file { 'kdc.conf':
     ensure  => file,
     path    => $kdc_conf_path,
