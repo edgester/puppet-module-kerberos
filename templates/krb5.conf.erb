@@ -36,8 +36,14 @@
 <% @extra_realms.each_pair do |realm, relations| -%>
 <% if relations -%>
         <%= realm %> = {
+<% if relations.is_a? Array -%>
 <% relations.each do |relation| -%>
 <% relation.each_pair do |key, val| -%>
+                <%= key %> = <%= val %>
+<% end -%>
+<% end -%>
+<% elsif relations.is_a? Hash -%>
+<% relations.each_pair do |key, val| -%>
                 <%= key %> = <%= val %>
 <% end -%>
 <% end -%>
