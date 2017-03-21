@@ -33,25 +33,32 @@
 <% end -%>
         }
 <% if ! @extra_realms.empty? -%>
-<% @extra_realms.each_pair do |realm, relations| -%>
-<% if relations -%>
+<%   @extra_realms.each_pair do |realm, relations| -%>
+<%     if relations -%>
         <%= realm %> = {
-<% if relations.is_a? Array -%>
-<% relations.each do |relation| -%>
-<% relation.each_pair do |key, val| -%>
+<%       if relations.is_a? Array -%>
+<%         relations.each do |relation| -%>
+<%           relation.each_pair do |key, val| -%>
                 <%= key %> = <%= val %>
-<% end -%>
-<% end -%>
-<% elsif relations.is_a? Hash -%>
-<% relations.each_pair do |key, val| -%>
+<%           end -%>
+<%         end -%>
+<%       elsif relations.is_a? Hash -%>
+<%         relations.each_pair do |key, val| -%>
+<%           if val.is_a? String -%>
                 <%= key %> = <%= val %>
-<% end -%>
-<% end -%>
+<%           elsif val.is_a? Array -%>
+<%# When we have 'kdc' => ['a', 'b'] we loop through values and repeat the key: -%>
+<%             val.each do |v| -%>
+                <%= key %> = <%= v %>
+<%             end -%>
+<%           end -%>
+<%         end -%>
+<%       end -%>
         }
-<% else -%>
+<%     else -%>
         <%= realm %> = {}
-<% end -%>
-<% end -%>
+<%     end -%>
+<%   end -%>
 <% end -%>
 
 [domain_realm]
