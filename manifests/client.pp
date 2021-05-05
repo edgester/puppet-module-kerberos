@@ -14,6 +14,7 @@
 class kerberos::client (
   $krb5_conf_path    = $kerberos::krb5_conf_path,
   $realm             = $kerberos::realm,
+  $ccache_name       = $kerberos::ccache_name,
   $domain_realm      = $kerberos::domain_realm,
   $kdcs              = $kerberos::kdcs,
   $master_kdc        = $kerberos::master_kdc,
