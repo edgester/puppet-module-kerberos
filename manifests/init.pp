@@ -34,6 +34,9 @@
 # $realm:
 #   The Kerberos realm (e.g. 'EXAMPLE.COM')
 #
+# $ccache_name:
+#   The Kerberos Credential Cache (e.g. 'KEYRING:persistent:%{uid}')
+#
 # $domain_realm
 #   Hash of domain to realm mappings.
 #
@@ -200,6 +203,7 @@ class kerberos(
 
   # settings in files
   $realm = 'EXAMPLE.COM',
+  $ccache_name = undef,
   $domain_realm = {},
   $kdcs = [],
   $master_kdc = undef,
